@@ -1,0 +1,68 @@
+---
+sidebar: sidebar 
+permalink: deploy-evaluation-ontap-select-ovf-template.html 
+keywords: ontap, select, ovf, template, deployment, evaluation, license 
+summary: 'Vous pouvez déployer une instance d"évaluation de 90 jours d"un cluster ONTAP Select à nœud unique.' 
+---
+= Déployez une instance d'évaluation de 90 jours d'un cluster ONTAP Select
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Vous pouvez déployer une instance d'évaluation de 90 jours d'un cluster ONTAP Select, dont la taille varie d'un seul nœud à 99 nœuds, à l'aide d'un modèle OVF sur VMware ESXi. Vous pouvez télécharger une licence d'évaluation si vous êtes un client existant ou nouveau. Par exemple, vous êtes un client existant et vous souhaitez essayer une nouvelle configuration avant d'acheter une licence.
+
+.À propos de cette tâche
+* Vous n'avez pas besoin d'obtenir un numéro de série ou une licence de capacité de stockage auprès de NetApp.
+* Vous pouvez allouer la même quantité de stockage aux données utilisateur qu'avec une licence achetée.
+* Vous ne pouvez pas mettre à niveau le nœud d'une licence d'évaluation vers une licence achetée.
+* Vous pouvez uniquement utiliser un compte vCenter pour déployer le modèle OVF. L'installation directe sur un hôte ESXi n'est actuellement pas prise en charge.
+* Vous devez installer le modèle OVF (contenu dans un fichier ova) à l'aide du client autonome vSphere ou du client web vSphere (la seule option pour ESXi 8.0 et versions ultérieures). Vous n'utilisez pas l'utilitaire d'administration ONTAP Select Deploy.
+
+
+
+
+== Étape 1 : Préparer l’hôte du cluster ONTAP Select
+
+Utilisez les exigences suivantes pour préparer l'hôte ESXi sur lequel le cluster ONTAP Select est déployé. La description de la plateforme est basée sur une configuration de type instance standard ou petite avec un stockage local à connexion directe (DAS) formaté à l'aide du système de fichiers VMFS-5 ou VMFS-6.
+
+image:prepare_ESXi_host_requirements.png["Exigences pour préparer l'hôte ESXi"]
+
+Pour plus d'informations sur les options de configuration de l'hôte, reportez-vous au link:esxi-host-configuration-and-preparation-checklist.html["Documentation d'installation d'ONTAP Select"].
+
+
+
+== Étape 2 : Déployer un cluster ONTAP Select à nœud unique à l’aide d’un modèle OVF
+
+Effectuez les étapes suivantes sur un serveur hôte ESXi 64 bits pris en charge.
+
+.Étapes
+. Accédez à la page du programme de produits d'évaluation NetApp et sélectionnez *ONTAP Select* pour télécharger le modèle OVF ONTAP Select sur votre poste de travail local.
+. Sign in au client web vSphere VMware à l'aide d'un compte disposant de privilèges d'administrateur.
+. Sélectionnez l'hôte en utilisant l'une des options suivantes :
++
+** Sélectionnez *Fichier* > *Déployer le modèle OVF*.
+** Sélectionnez *Datacenter*. Ensuite, cliquez avec le bouton droit et sélectionnez *Deploy OVF Template*.
+
+
+. Sélectionnez le fichier OVA source ONTAP Select sur votre poste de travail local, puis sélectionnez *Suivant*.
+. Vérifiez les détails du modèle OVF et sélectionnez *Suivant*.
+. Lisez attentivement les détails du CLUF et sélectionnez *Accepter*. Ensuite, sélectionnez *Suivant*.
+. Saisissez le nom de la nouvelle machine virtuelle et sélectionnez *Suivant*.
+. Si plusieurs banques de données sont disponibles, sélectionnez la banque de données et sélectionnez *Suivant*.
+. Sélectionnez *Thick Provision Lazy Zeroed*, puis sélectionnez *Suivant*.
+. Sélectionnez les réseaux de données et de gestion, puis sélectionnez *Suivant*.
+. Sur la page *Propriétés*, indiquez toutes les valeurs requises et sélectionnez *Suivant*.
+. Vérifiez les détails du déploiement et sélectionnez *Power on after deployment*.
+. Sélectionnez *Terminer* pour démarrer le processus de déploiement.
+. Une fois le cluster ONTAP Select déployé, vous pouvez configurer le cluster à l'aide du System Manager ou de l'interface CLI. Vous devez affecter le disque en utilisant l'opération standard ONTAP *disk assign*.
+
+
+.Informations connexes
+* link:concept_lic_evaluation.html["Découvrez les licences d'évaluation pour les déploiements ONTAP Select"]
+* link:http://mysupport.netapp.com/matrix["Outil Interoperability Matrix Tool"^]
+

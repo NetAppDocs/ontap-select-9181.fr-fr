@@ -1,0 +1,19 @@
+---
+sidebar: sidebar 
+permalink: concept_workflow_deploy.html 
+keywords: plan, planning, cluster deployment workflow, deployment workflow, workflow, deployment steps 
+summary: Il existe un processus de flux de travail que vous pouvez utiliser pour déployer un cluster ONTAP Select. 
+---
+= Flux de travail d'installation et de déploiement d'ONTAP Select
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Vous pouvez utiliser le flux de travail suivant pour déployer et administrer un cluster ONTAP Select.
+
+image:deploy_workflow2.png["Décrit le flux de travail complet nécessaire au déploiement d'un cluster ONTAP Select."]

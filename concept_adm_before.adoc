@@ -1,0 +1,78 @@
+---
+sidebar: sidebar 
+permalink: concept_adm_before.html 
+keywords: administer, administering, web, before you begin 
+summary: 'Après avoir créé un cluster ONTAP Select, vous pouvez assurer le support du déploiement en effectuant diverses tâches d"administration. Il convient de prendre en compte quelques points généraux.' 
+---
+= Avant de commencer l'administration ONTAP Select
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Après avoir créé un cluster ONTAP Select, vous pouvez assurer le support du déploiement en effectuant diverses tâches d'administration. Il convient de prendre en compte quelques points généraux.
+
+En général, les procédures que vous pouvez effectuer à l'aide de l'interface web Deploy se répartissent en trois catégories.
+
+.Déployer un cluster ONTAP Select
+Vous pouvez déployer un cluster à nœud unique ou à nœuds multiples. Voir link:task_deploy_cluster.html["Déployer un cluster ONTAP Select"] pour plus d'informations.
+
+.Effectuez une procédure avec un cluster ONTAP Select existant
+Les procédures administratives sont organisées en différentes catégories, telles que _Security_ et _Clusters_.
+
+.Effectuez une procédure sur l'utilitaire de déploiement
+Il existe plusieurs procédures spécifiques à Deploy (comme la modification du mot de passe de l'administrateur).
+
+
+
+== Administrer ONTAP Select
+
+De nombreuses procédures administratives sont disponibles pour la prise en charge de ONTAP Select. Des procédures spécifiques à l'utilitaire d'administration Deploy sont également proposées. Les plus importantes de ces procédures sont présentées ci-dessous. En général, elles utilisent toutes l'interface utilisateur web de Deploy.
+
+
+NOTE: Vous pouvez également link:https://docs.netapp.com/us-en/ontap-select/task_cli_signing_in.html["utilisez l'interface de ligne de commandes"] administrer ONTAP Select.
+
+
+
+== Effectuer une configuration ONTAP supplémentaire
+
+Après le déploiement d’un cluster ONTAP Select, vous pouvez configurer et gérer le cluster comme vous le feriez avec un système ONTAP basé sur du matériel. Par exemple, vous pouvez utiliser ONTAP System Manager ou la ligne de commandes ONTAP pour configurer le cluster ONTAP Select.
+
+.NetApp client logiciel
+Vous pouvez vous connecter à ONTAP Select en utilisant les logiciels clients NetApp compatibles suivants :
+
+* ONTAP System Manager
+* Active IQ Unified Manager
+* OnCommand Insight
+* OnCommand Workflow Automation
+* SnapCenter
+* Console de stockage virtuel pour VMware vSphere
+
+
+Pour identifier les versions prises en charge du logiciel client, consultez la link:https://mysupport.netapp.com/matrix/["Outil Interoperability Matrix Tool"^]. Si le logiciel client prend en charge ONTAP 9, alors la même version est également prise en charge avec ONTAP Select.
+
+
+NOTE: L’utilisation de SnapCenter et des plug-ins correspondants nécessite des licences serveur. La gestion des licences des plug-ins SnapCenter au niveau du système de stockage n’est actuellement pas prise en charge avec ONTAP Select.
+
+Tout autre logiciel client NetApp qui n'est pas inclus dans la liste n'est pas pris en charge par ONTAP Select.
+
+.Options de configuration possibles
+Plusieurs options sont disponibles lors de la configuration du cluster, notamment les suivantes :
+
+* Création de la configuration réseau
+* Disposition de vos agrégats
+* Création des machines virtuelles de stockage des données (SVM)
+
+
+.Licences achetées avec capacité de stockage
+Si vous avez décidé de ne pas installer les fichiers de licence avec capacité de stockage lors du déploiement du cluster ONTAP Select, vous devez acquérir et installer les fichiers de licence avant l'expiration du délai de grâce pour les clusters fonctionnant avec une licence achetée.
+
+.Agrégats en miroir
+L'utilitaire d'administration Deploy crée des disques de données de secours sur chaque nœud ONTAP Select à partir de l'espace de datastore utilisable (par exemple, Pool0 et Pool1). Pour garantir la haute disponibilité de vos données sur un cluster multi-nœuds, vous devez créer un agrégat en miroir à l'aide de ces disques de secours.
+
+
+NOTE: La reprise en haute disponibilité n'est prise en charge que lorsque les agrégats de données sont configurés comme des agrégats en miroir.

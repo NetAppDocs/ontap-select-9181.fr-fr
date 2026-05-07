@@ -1,0 +1,39 @@
+---
+sidebar: sidebar 
+permalink: concept_api_before_browser.html 
+keywords: rest api, deploy rest api, rest, access browser, before you begin 
+summary: 'Il y a plusieurs points à prendre en compte avant d"utiliser la page de documentation en ligne de Deploy.' 
+---
+= Avant d'accéder à l'API ONTAP Select Deploy avec un navigateur
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Il y a plusieurs points à prendre en compte avant d'utiliser la page de documentation en ligne de Deploy.
+
+
+
+== Plan de déploiement
+
+Si vous prévoyez d'effectuer des appels d'API dans le cadre de tâches de déploiement ou d'administration spécifiques, il est conseillé de créer un plan de déploiement. Ces plans peuvent être formels ou informels et contiennent généralement vos objectifs et les appels d'API à utiliser. Reportez-vous à Workflow processes using the Deploy REST API pour plus d'informations.
+
+
+
+== Exemples JSON et définitions de paramètres
+
+Chaque appel d'API est décrit sur la page de documentation selon un format uniforme. Le contenu inclut des notes d'implémentation, des paramètres de requête et des codes d'état HTTP. De plus, vous pouvez afficher des détails sur le JSON utilisé avec les requêtes et les réponses de l'API comme suit :
+
+* Exemple de valeur : Si vous cliquez sur _Exemple de valeur_ lors d’un appel API, une structure JSON typique pour l’appel s’affiche. Vous pouvez modifier l’exemple selon vos besoins et l’utiliser comme entrée pour votre requête.
+* Modèle Si vous cliquez sur _Modèle_, une liste complète des paramètres JSON s'affiche, avec une description pour chaque paramètre.
+
+
+
+
+== Soyez prudent lors de l'émission d'appels API
+
+Toutes les opérations API effectuées via la page de documentation Deploy sont des opérations en direct. Veillez à ne pas créer, modifier ou supprimer par erreur des données de configuration ou autres.

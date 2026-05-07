@@ -1,0 +1,108 @@
+---
+sidebar: sidebar 
+permalink: task_cli_deploy_image_add.html 
+keywords: administer, administering, cli, deploy, ontap select image, add 
+summary: 'Ajoutez une image ONTAP Select à votre instance de l"utilitaire d"administration Deploy. Après l"installation, vous pouvez l"utiliser lors du déploiement d"un cluster ONTAP Select.' 
+---
+= Ajouter une image ONTAP Select à Deploy
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Ajoutez une image ONTAP Select à votre instance de l'utilitaire d'administration Deploy. Une fois l'image installée, vous pouvez l'utiliser lors du déploiement d'un cluster ONTAP Select.
+
+.Avant de commencer
+Avant d'ajouter de nouvelles images ONTAP Select à Deploy, vous devez d'abord supprimer toutes les images inutiles.
+
+
+NOTE: Vous ne devez ajouter une image ONTAP Select que si sa version est antérieure à la version d'origine incluse avec votre instance de l'utilitaire Deploy. L'ajout de versions ultérieures d'ONTAP Select dès qu'elles sont disponibles auprès de NetApp n'est pas une configuration prise en charge.
+
+
+
+== Étape 1 : Téléchargez l'image d'installation
+
+Pour commencer le processus d'ajout d'une image ONTAP Select à une instance de l'utilitaire Deploy, vous devez télécharger l'image d'installation depuis le site de support NetApp. L'image d'installation ONTAP Select est formatée comme un fichier compressé unique.
+
+.Étapes
+. Accédez à la page link:https://mysupport.netapp.com/site/downloads/["NetApp Support Site téléchargements"^].
+. Faites défiler vers le bas et sélectionnez *ONTAP Select Image*.
+. Sélectionnez la version souhaitée de l'image d'installation.
+. Veuillez consulter le contrat de licence utilisateur final (CLUF) et sélectionner *Accepter et continuer*.
+. Sélectionnez et téléchargez le package *ONTAP Select Image Install* approprié. Répondez à toutes les invites si nécessaire.
+
+
+
+
+== Étape 2 : Téléversez l’image d’installation sur Deploy
+
+Après avoir obtenu l'image d'installation ONTAP Select, vous devez télécharger le fichier sur la machine virtuelle Deploy.
+
+.Avant de commencer
+Vérifiez que le fichier image d'installation est disponible sur votre poste de travail local. Vous devez également avoir le mot de passe du compte utilisateur administrateur Deploy.
+
+.À propos de cette tâche
+Cette tâche décrit une méthode pour téléverser le fichier sur la machine virtuelle Deploy. D'autres options peuvent être plus adaptées à votre environnement.
+
+.Étape
+. Dans une invite de commandes sur votre poste de travail local, téléchargez le fichier image sur la machine virtuelle Deploy, comme indiqué dans les exemples suivants :
++
+....
+scp image_v_93_install_esx.tgz admin@10.234.81.101:/home/admin (provide password when prompted)
+....
++
+....
+sftp admin@10.234.81.101 (provide password when prompted)
+put image_v_93_install_esx.tgz
+exit
+....
+
+
+.Résultat
+Le fichier d'installation du nœud est stocké dans le répertoire local de l'utilisateur admin.
+
+
+
+== Étape 3 : Ajouter l'image d'installation
+
+Ajoutez l'image d'installation ONTAP Select au répertoire des images de Deploy afin qu'elle soit disponible lors du déploiement d'un nouveau cluster.
+
+.Avant de commencer
+Vous devez savoir dans quel répertoire le fichier image d'installation a été placé sur la machine virtuelle de l'utilitaire de déploiement. Il est supposé que ce fichier se trouve dans le répertoire local de l'administrateur.
+
+.Étapes
+. Sign in à l'utilitaire de déploiement en ligne de commande (CLI) à l'aide de SSH avec le compte administrateur (admin).
+. Démarrer le shell Bash :
++
+[source, cli]
+----
+shell bash
+----
+. Placez le fichier image d'installation dans le répertoire images, comme indiqué dans l'exemple suivant :
++
+`tar -xf image_v_93_install_esx.tgz -C /opt/netapp/images/`
+
+
+
+
+
+== Étape 4 : Afficher les images d’installation disponibles
+
+Afficher les images ONTAP Select disponibles lors du déploiement d'un nouveau cluster.
+
+.Étapes
+. Accédez à la page Web de documentation en ligne de la machine virtuelle Deploy utility et connectez-vous à l'aide du compte administrateur (admin) :
++
+`\http://<FQDN|IP_ADDRESS>/api/ui`
+
++
+Utilisez le nom de domaine ou l'adresse IP de la machine virtuelle Deploy.
+
+. Accédez au bas de la page et sélectionnez *Deploy* puis sélectionnez *GET /images*.
+. Sélectionnez *Essayez-le !* pour afficher les images ONTAP Select disponibles.
+. Confirmez que l'image souhaitée est disponible.
+

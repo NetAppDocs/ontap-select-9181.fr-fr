@@ -1,0 +1,119 @@
+---
+sidebar: sidebar 
+permalink: task_cli_migrate_deploy.html 
+keywords: administer, administering, cli, deploy, deploy instance, migrate 
+summary: 'Vous pouvez migrer une instance existante de l"utilitaire d"administration Deploy vers une nouvelle machine virtuelle à l"aide de la ligne de commandes.' 
+---
+= Migrer une instance ONTAP Select Deploy vers une nouvelle machine virtuelle
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Vous pouvez migrer une instance existante de l'utilitaire d'administration Deploy vers une nouvelle machine virtuelle à l'aide de la ligne de commandes.
+
+Cette procédure consiste à créer une nouvelle machine virtuelle utilisant les données de configuration de la machine virtuelle d'origine. La nouvelle machine virtuelle et la machine virtuelle d'origine doivent exécuter la même version et la même release de l'utilitaire Deploy. Vous ne pouvez pas migrer vers une version ou une release différente de l'utilitaire Deploy.
+
+
+
+== Étape 1 : Sauvegardez les données de configuration du déploiement
+
+Vous devez créer une sauvegarde des données de configuration de Deploy lors de la migration de la machine virtuelle. Vous devriez également créer une sauvegarde après le déploiement d’un cluster ONTAP Select. Les données sont enregistrées dans un fichier chiffré unique que vous pouvez télécharger sur votre poste de travail local.
+
+.Avant de commencer
+* Assurez-vous que Deploy n'effectue aucune autre tâche pendant l'opération de sauvegarde.
+* Enregistrez l'image originale de la machine virtuelle Deploy.
++
+
+CAUTION: L'image de la machine virtuelle Deploy d'origine est requise plus tard dans cette procédure, lorsque vous restaurez les données de configuration Deploy de la machine virtuelle d'origine vers la nouvelle machine virtuelle.
+
+
+
+.À propos de cette tâche
+Le fichier de sauvegarde que vous créez capture toutes les données de configuration de la machine virtuelle. Ces données décrivent différents aspects de votre environnement de déploiement, y compris les clusters ONTAP Select.
+
+.Étapes
+. Sign in à l'interface de ligne de commandes de l'utilitaire Deploy en utilisant SSH avec le compte administrateur.
+. Créez une sauvegarde des données de configuration de Deploy, qui sont stockées dans un répertoire interne du serveur Deploy :
++
+[source, cli]
+----
+deploy backup create
+----
+. Saisissez un mot de passe pour la sauvegarde lorsque vous y êtes invité.
++
+Le fichier de sauvegarde est chiffré à l'aide du mot de passe.
+
+. Afficher les sauvegardes disponibles dans le système :
++
+[source, cli]
+----
+deploy backup show -detailed
+----
+. Sélectionnez votre fichier de sauvegarde en fonction de la date indiquée dans le champ *Created* et notez la valeur de l'*Download URL*.
++
+Vous pouvez accéder au fichier de sauvegarde via l'URL.
+
+. Utilisez un navigateur web ou un utilitaire tel que Curl pour télécharger le fichier de sauvegarde sur votre poste de travail local à l'aide de l'URL.
+
+
+
+
+== Étape 2 : Installez une nouvelle instance de la machine virtuelle Deploy
+
+Vous devez créer une nouvelle instance de la machine virtuelle Deploy que vous pourrez mettre à jour avec les données de configuration de la machine virtuelle d'origine.
+
+.Avant de commencer
+Vous devez connaître les procédures utilisées pour télécharger et déployer la machine virtuelle ONTAP Select Deploy dans un environnement VMware.
+
+.À propos de cette tâche
+Cette tâche est décrite de manière générale.
+
+.Étapes
+. Créez une nouvelle instance de la machine virtuelle Deploy :
++
+.. Téléchargez l'image de la machine virtuelle.
+.. Déployez la machine virtuelle et configurez l'interface réseau.
+.. Accédez à l'utilitaire Deploy via SSH.
+
+
+
+
+.Informations connexes
+link:task_install_deploy.html["Installer ONTAP Select Deploy"]
+
+
+
+== Étape 3 : Restaurez les données de configuration de Deploy sur la nouvelle machine virtuelle
+
+Vous devez restaurer les données de configuration de la machine virtuelle d'origine de l'utilitaire Deploy vers la nouvelle machine virtuelle. Les données se trouvent dans un fichier unique que vous devez télécharger depuis votre poste de travail local.
+
+.Avant de commencer
+Vous devez disposer des données de configuration issues d'une sauvegarde précédente. Ces données sont contenues dans un seul fichier et doivent être disponibles sur votre poste de travail local.
+
+.Étapes
+. Dans une invite de commandes sur votre poste de travail local, utilisez l'utilitaire sftp pour transférer le fichier de sauvegarde vers la machine virtuelle Deploy, comme indiqué dans l'exemple suivant :
++
+....
+sftp admin@10.234.81.101 (provide password when prompted)
+put deploy_backup_20190601162151.tar.gz
+exit
+....
+. Sign in à l'interface de ligne de commandes de l'utilitaire Deploy en utilisant SSH avec le compte administrateur.
+. Restaurez les données de configuration :
++
+[source, cli]
+----
+deploy backup restore -path <path_name> -filename <file_name>
+----
++
+Exemple de commande :
+
++
+`deploy backup restore -path /home/admin -filename deploy_backup_20180601162151.tar.gz`
+
+

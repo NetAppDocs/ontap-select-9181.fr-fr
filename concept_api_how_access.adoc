@@ -1,0 +1,38 @@
+---
+sidebar: sidebar 
+permalink: concept_api_how_access.html 
+keywords: rest api, deploy rest api, rest, access, accessing, how to access 
+summary: 'Grâce à la flexibilité inhérente des services Web REST, l"API ONTAP Select Deploy peut être accessible de plusieurs manières différentes.' 
+---
+= Comment accéder à l'API ONTAP Select Deploy
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Grâce à la flexibilité inhérente des services Web REST, l'API ONTAP Select Deploy peut être accessible de plusieurs manières différentes.
+
+
+NOTE: L'API REST incluse dans ONTAP Select Deploy possède un numéro de version. Le numéro de version de l'API est indépendant du numéro de version de Deploy. L'utilitaire d'administration ONTAP Select Deploy 9.17.1 inclut la version 3 de l'API REST.
+
+
+
+== Déployer l'interface utilisateur native de l'utilitaire
+
+La principale façon d'accéder à l'API est via l'interface web ONTAP Select Deploy. Le navigateur effectue des appels à l'API et reformate les données selon la conception de l'interface utilisateur. Vous pouvez également accéder à l'API via l'interface en ligne de commandes de l'utilitaire Deploy.
+
+
+
+== Page de documentation en ligne ONTAP Select Deploy
+
+La page de documentation en ligne d'ONTAP Select Deploy offre un point d'accès alternatif lors de l'utilisation d'un navigateur. Outre la possibilité d'exécuter directement des appels d'API individuels, cette page fournit également une description détaillée de l'API, incluant les paramètres d'entrée et les autres options pour chaque appel. Les appels d'API sont organisés en plusieurs domaines fonctionnels ou catégories.
+
+
+
+== Programme personnalisé
+
+Vous pouvez accéder à l'API Deploy à l'aide de plusieurs langages et outils de programmation. Parmi les plus courants figurent Python, Java et cURL. Un programme, un script ou un outil utilisant l'API agit comme un client de services web REST. L'utilisation d'un langage de programmation permet de mieux comprendre l'API et offre la possibilité d'automatiser les déploiements ONTAP Select.

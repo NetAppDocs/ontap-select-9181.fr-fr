@@ -1,0 +1,308 @@
+---
+sidebar: sidebar 
+permalink: reference_new_ots.html 
+keywords: new features 
+// summary: The current release includes several new features and improvements specific to ONTAP Select. 
+summary: La version actuelle comprend plusieurs nouvelles fonctionnalités ou améliorations spécifiques à ONTAP Select. 
+---
+= Nouveautés d'ONTAP Select
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Découvrez les nouvelles fonctionnalités et améliorations des versions prises en charge d'ONTAP Select.
+
+
+
+== ONTAP Select 9.18.1
+
+Mises à jour des options de téléchargement du produit ONTAP Select:: Les options de téléchargement du produit ONTAP Select sur le site d'assistance NetApp changent avec la sortie d'ONTAP Select 9.18.1 pour devenir *ONTAP Select Deploy* et *ONTAP Select Image*. Ces deux nouvelles options de téléchargement de produit remplacent les quatre précédentes, comme indiqué dans le tableau suivant :
++
+--
+[cols="30,30,40"]
+|===
+| Option de téléchargement du produit précédent | Nouvelle option de téléchargement du produit | Pour plus d'informations, rendez-vous sur.... 
+
+
+| ONTAP Select | ONTAP Select Deploy | link:task_install_deploy.html["Installer ONTAP Select Deploy"] 
+
+
+| Installation de l'image ONTAP Select | Image ONTAP Select | link:task_cli_deploy_image_add.html["Ajouter une image ONTAP Select à Deploy"] 
+
+
+| Mise à niveau de ONTAP Select Deploy | ONTAP Select Deploy | link:task_cli_upgrade_deploy.html["Mettre à niveau une instance ONTAP Select Deploy"] 
+
+
+| Mise à niveau du nœud ONTAP Select | Image ONTAP Select | link:concept_adm_upgrading_nodes.html["Mettre à niveau les nœuds ONTAP Select"] 
+|===
+--
+Soutien renforcé à l'expansion et à la contraction des clusters:: À partir de ONTAP Select 9.18.1, l’extension et la réduction des clusters sont prises en charge entre les clusters ONTAP Select à quatre nœuds et à douze nœuds sur les hôtes hyperviseur ESXi et KVM.
++
+--
+--
+Vous pouvez augmenter la taille du cluster existant sur un hôte ESXi ou KVM selon les incréments suivants :
+
+* De quatre nœuds à six, huit, dix ou douze nœuds
+* De six nœuds à huit, dix ou douze nœuds
+* De huit nœuds à dix ou douze nœuds
+* De dix à douze nœuds
+
+
+Vous pouvez réduire la taille du cluster existant sur un hôte ESXi ou KVM selon les incréments suivants :
+
+* De douze nœuds à dix, huit, six ou quatre nœuds
+* De dix nœuds à huit, six ou quatre nœuds
+* De huit à six ou quatre nœuds
+* De six à quatre nœuds
+
+
+--
+link:task_cluster_expansion_contraction.html["Découvrez l'expansion et la contraction de cluster ainsi que les versions d'hyperviseur KVM et ESXi prises en charge"].
+
+--
+Prise en charge mise à jour de l'hyperviseur KVM:: À partir de ONTAP Select 9.18.1, l'hyperviseur KVM est pris en charge sur Rocky Linux 10.1.
+
+
+
+
+== ONTAP Select 9.17.1
+
+Prise en charge RAID logicielle pour les disques NVMe connectés localement sur les hôtes KVM:: ONTAP Select 9.17.1 introduit la prise en charge du RAID logiciel pour les disques NVMe connectés localement à ONTAP Select sur un hôte hyperviseur Kernel-Based Virtual Machine (KVM).
++
+--
+Pour utiliser le RAID logiciel pour les disques NVMe connectés localement, vous devez link:kvm-host-configuration-and-preparation-checklist.html["configurer le transfert PCI (DirectPath IO)"] lors de la préparation de l'hôte KVM. Cela permet à l'hôte KVM d'accéder directement aux disques NVMe connectés localement, ce qui est nécessaire pour les tâches suivantes :
+
+* Configuration de l'hôte KVM pour utiliser des disques NVMe
+* Utilisation du RAID logiciel après le déploiement du cluster
+
+
+link:concept_stor_swraid_local.html["Découvrez les services de configuration RAID logiciel pour le stockage local attaché"].
+
+--
+Prise en charge de l'extension et de la réduction des clusters sur les hôtes KVM:: À partir d'ONTAP Select 9.17.1, la fonctionnalité d'extension et de réduction de cluster est prise en charge pour les hôtes hyperviseur Kernel-Based Virtual Machine (KVM) et ESXi. Pour ONTAP Select 9.16.1 et 9.15.1, l'extension et la réduction de cluster sont uniquement prises en charge pour les hôtes hyperviseur ESXi.
++
+--
+Vous pouvez utiliser la fonction d’extension et de réduction de cluster sur un cluster ONTAP Select existant pour augmenter la taille d’un cluster à six nœuds à un cluster à huit nœuds ou pour réduire la taille d’un cluster à huit nœuds à un cluster à six nœuds.
+
+link:task_cluster_expansion_contraction.html["Découvrez l'expansion et la contraction de cluster ainsi que les versions d'hyperviseur KVM et ESXi prises en charge"].
+
+--
+Prise en charge améliorée de l'extension et de la réduction des clusters sur les hôtes ESXi:: À partir d'ONTAP Select 9.17.1, l'extension et la réduction des clusters sont prises en charge entre les clusters à six nœuds et à douze nœuds sur les hôtes ESXi :
++
+--
+--
+Vous pouvez augmenter la taille d'un cluster ESXi existant par les incréments suivants :
+
+* De six nœuds à huit, dix ou douze nœuds
+* De huit nœuds à dix ou douze nœuds
+* De dix à douze nœuds
+
+
+Vous pouvez réduire la taille d'un cluster ESXi existant par les incréments suivants :
+
+* De douze nœuds à dix, huit ou six nœuds
+* De dix nœuds à huit ou six nœuds
+* De huit à six nœuds
+
+
+--
+link:task_cluster_expansion_contraction.html["Découvrez l'expansion et la contraction de cluster ainsi que les versions d'hyperviseur KVM et ESXi prises en charge"].
+
+--
+Prise en charge du SnapMirror cloud:: À partir de ONTAP Select 9.17.1, SnapMirror cloud est pris en charge avec ONTAP Select. SnapMirror cloud est une fonctionnalité ONTAP sous licence qui est activée par défaut lorsque vous déployez un cluster ONTAP Select 9.17.1 ou mettez à niveau un cluster ONTAP Select existant vers la version 9.17.1.
++
+--
+https://docs.netapp.com/us-en/ontap/concepts/snapmirror-cloud-backups-object-store-concept.html["Découvrez les sauvegardes cloud SnapMirror vers le stockage objet"^].
+
+--
+Prise en charge de SnapLock Select:: À partir de ONTAP Select 9.17.1, les nouveaux déploiements disposent automatiquement de SnapLock Select (y compris le verrouillage inviolable des snapshots) sous licence. Pour les mises à niveau depuis ONTAP Select 9.16.1 et versions antérieures, vous pouvez télécharger la licence SnapLock Select gratuitement depuis le link:https://mysupport.netapp.com/site/["Site de support NetApp"^] et l’appliquer manuellement. Pour plus d'informations, voir link:reference_lic_ontap_features.html#enabled-ontap-features["Les fonctionnalités ONTAP sont activées automatiquement par défaut"].
+Prise en charge de vSAN ESA sur les clusters multi-nœuds:: À partir d'ONTAP Select 9.17.1, la prise en charge de l'architecture de stockage vSAN Express (ESA) est étendue au déploiement de clusters multi-nœuds. Cette amélioration vous permet de déployer des configurations vSAN ESA.
++
+--
+vSAN ESA est une configuration spécifique à ESXi et constitue une nouvelle architecture pour VMware vSAN introduite dans vSphere 8. vSAN ESA est conçu pour offrir une efficacité, une évolutivité et des performances améliorées, notamment lors de l’utilisation de périphériques flash TLC basés sur NVMe.
+
+ONTAP Select Deploy et ONTAP Select pour ESXi prennent en charge la configuration d'un cluster ONTAP Select à nœud unique et à nœuds multiples, utilisant soit un vSAN, soit un type de datastore externe pour son pool de stockage.
+
+[NOTE]
+====
+Pour effectuer des opérations sur la bibliothèque de contenu, vous aurez besoin de niveaux d'autorisation supplémentaires. Ceci est nécessaire pour les déploiements vSAN ESA si vous utilisez des rôles restreints.
+
+link:https://docs.netapp.com/us-en/ontap-select/reference_plan_dep_vmware.html["Découvrez comment accéder aux niveaux d'autorisation pour les opérations de la bibliothèque de contenu"^].
+
+====
+--
+Prise en charge mise à jour du pilote NDA:: À partir d'ONTAP Select 9.17.1, le pilote de périphérique FreeBSD NDA (NVMe Direct Access) remplace le pilote NVD (NVMe express disk driver). Le pilote FreeBSD prend en charge les périphériques à accès direct en implémentant le protocole de commande NVMe. Lorsque vous déployez un cluster ONTAP Select 9.17.1 ou mettez à niveau un cluster ONTAP Select existant vers la version 9.17.1, le pilote FreeBSD est démarré par défaut lors de la configuration des périphériques NVMe.
++
+--
+Pour ONTAP Select 9.16.1 et versions antérieures, le NVD continue de prendre en charge les périphériques NVMe dans votre déploiement ONTAP Select.
+
+--
+Prise en charge mise à jour de l'hyperviseur KVM:: À partir de ONTAP Select 9.17.1, le hyperviseur KVM est pris en charge sur Red Hat Enterprise Linux (RHEL) 10.1, 10.0, 9.7 et 9.6 ainsi que sur Rocky Linux 10.0, 9.7 et 9.6.
++
+--
+[NOTE]
+====
+Il existe des limitations concernant le flux de travail RAID logiciel pour les hyperviseurs KVM sur les hôtes RHEL 10.1 et 10.0 et Rocky Linux 10.0. Pour plus d’informations, consultez les articles suivants de la Knowledge Base :
+
+* link:https://kb.netapp.com/on-prem/ontap/ontap-select/Select-Issues/CDEPLOY-4020["CDEPLOY-4020 : ONTAP Select Deploy : Message d’avertissement lors de la création du cluster HWR sous RHEL 10 et ROCKY 10"^]
+* link:https://kb.netapp.com/on-prem/ontap/ontap-select/Select-Issues/CDEPLOY-4025["CDEPLOY-4025 : ONTAP Select DeployGUI : Les pools de stockage et les disques de stockage ne sont pas visibles pour SWR sur la page de création de cluster sur les hôtes RHEL10/Rocky 10"^]
+
+
+====
+--
+Prise en charge améliorée de VMware ESXi:: ONTAP Select 9.17.1 inclut la prise en charge de VMware ESXi 9.0.
+
+
+
+
+== ONTAP Select 9.16.1
+
+Prise en charge mise à jour des fichiers de licence NetApp:: À compter d'ONTAP Select 9.16.1, la prise en charge des fichiers de licence NetApp (NLF) est mise à jour. Le nouveau format NLF inclut les licences pour les fonctionnalités ARP, ONTAP S3 et S3 SnapMirror. link:reference_lic_ontap_features.html#enabled-ontap-features["En savoir plus"].
++
+--
+Pour un nouveau déploiement ONTAP Select 9.16.1, le nouveau format NLF est appliqué automatiquement. Lors de la mise à niveau d'un ONTAP Select Deploy existant vers la version 9.16.1, le nouveau format NLF n'est pas appliqué. Pour obtenir les licences de fonctionnalités ARP, ONTAP S3 et S3 SnapMirror, vous devez télécharger le fichier NLF mis à jour après la mise à niveau. Si vous revenez à ONTAP Select 9.15.1 ou à une version antérieure, vous devez réinstaller les licences de fonctionnalités dont vous disposiez avant la mise à niveau.
+
+--
+Prise en charge de la protection autonome contre les ransomwares:: ONTAP Select 9.16.1 introduit la prise en charge de la protection autonome contre les ransomwares (ARP). ONTAP Select 9.16.1 prend uniquement en charge les mises à jour manuelles pour ARP, les mises à jour automatiques ne sont pas prises en charge. La licence de la fonctionnalité ARP est incluse dans le NLF pour ONTAP Select 9.16.1. link:reference_lic_ontap_features.html#enabled-ontap-features["En savoir plus"].
+Prise en charge améliorée de VMware ESXi:: ONTAP Select 9.16.1 inclut la prise en charge de VMware ESXi 8.0 U3.
+Prise en charge mise à jour de l'hyperviseur KVM:: À partir de ONTAP Select 9.16.1, l'hyperviseur KVM est pris en charge sur RHEL 9.5 et Rocky Linux 9.5.
+
+
+
+
+== ONTAP Select 9.15.1
+
+Prise en charge mise à jour de l'hyperviseur KVM:: À partir d'ONTAP Select 9.15.1, l'hyperviseur Kernel-Based Virtual Machine (KVM) est pris en charge sur RHEL 9.4 et Rocky Linux 9.4.
+Prise en charge de l'expansion et de la contraction des clusters:: À partir de ONTAP Select 9.15.1, l'expansion et la contraction des clusters sont prises en charge.
++
+--
+* Extension du cluster de six nœuds à huit nœuds
++
+Vous pouvez augmenter la taille du cluster d'un cluster à six nœuds à un cluster à huit nœuds grâce à la fonctionnalité d'extension de cluster. Les extensions de cluster à un, deux ou quatre nœuds vers des clusters à six ou huit nœuds ne sont actuellement pas prises en charge. link:task_cluster_expansion_contraction.html#expand-the-cluster["En savoir plus"].
+
+* Réduction des clusters huit nœuds à six nœuds
++
+Vous pouvez réduire la taille d'un cluster de huit nœuds à six nœuds grâce à la fonctionnalité de réduction de cluster. La réduction de clusters de six ou huit nœuds à un, deux ou quatre nœuds n'est actuellement pas prise en charge. link:task_cluster_expansion_contraction.html#contract-the-cluster["En savoir plus"].
+
+
+
+--
+
+
+
+NOTE: La prise en charge de l’extension et de la réduction des clusters est limitée aux clusters ESXi uniquement.
+
+
+
+== ONTAP Select 9.14.1
+
+Prise en charge de l'hyperviseur KVM:: À compter d'ONTAP Select 9.14.1, la prise en charge de l'hyperviseur KVM a été rétablie. Auparavant, la prise en charge du déploiement d'un nouveau cluster sur un hyperviseur KVM avait été supprimée dans ONTAP Select 9.10.1 et la prise en charge de la gestion des clusters et hôtes KVM existants, à l'exception de la mise hors ligne ou de la suppression, avait été supprimée dans ONTAP Select 9.11.1.
+Le plug-in VMware vCenter n'est plus pris en charge pour le déploiement:: À compter de ONTAP Select 9.14.1, le plug-in Deploy VMware vCenter n'est plus pris en charge.
+Prise en charge mise à jour d'ONTAP Select Deploy:: Si vous utilisez une version de ONTAP Select Deploy 9.14.1 inférieure à 9.14.1P2, vous devez effectuer la mise à niveau vers ONTAP Select Deploy 9.14.1P2 dès que possible. Pour plus d'informations, consultez la link:https://library.netapp.com/ecm/ecm_download_file/ECMLP2886733["Notes de version d'ONTAP Select 9.14.1"^].
+Prise en charge améliorée de VMware ESXi:: ONTAP Select 9.14.1 inclut la prise en charge de VMware ESXi 8.0 U2.
+
+
+
+
+== ONTAP Select 9.13.1
+
+Prise en charge de NVMe sur TCP:: Lors de la mise à niveau vers ONTAP Select 9.13.1, vous devez disposer de la nouvelle licence pour la prise en charge de NVMe sur TCP. Cette licence est automatiquement incluse lors du premier déploiement d'ONTAP Select à partir de la version 9.13.1.
+Prise en charge VMware ESXi mise à jour:: À partir d'ONTAP 9.13.1, VMware ESXi 8.0.1 GA (build 20513097) est pris en charge avec la version matérielle 4 et ultérieures.
+Prise en charge mise à jour d'ONTAP Select Deploy:: À compter d'avril 2024, ONTAP Select Deploy 9.13.1 n'est plus disponible sur le NetApp Support Site. Si vous utilisez ONTAP Select Deploy 9.13.1, vous devez effectuer une mise à niveau vers ONTAP Select Deploy 9.14.1P2 dès que possible. Pour plus d'informations, consultez la link:https://library.netapp.com/ecm/ecm_download_file/ECMLP2886733["Notes de version d'ONTAP Select 9.14.1"^].
+
+
+
+
+== ONTAP Select 9.12.1
+
+ONTAP Select 9.12.1 bénéficie de la plupart des nouveautés de la version actuelle du produit ONTAP de base. Il n'inclut aucune nouvelle fonctionnalité ni amélioration spécifique à ONTAP Select.
+
+À compter d'avril 2024, ONTAP Select Deploy 9.12.1 n'est plus disponible sur le site de support NetApp. Si vous utilisez ONTAP Select Deploy 9.12.1, vous devez effectuer une mise à niveau vers ONTAP Select Deploy 9.14.1P2 dès que possible. Pour plus d'informations, consultez la link:https://library.netapp.com/ecm/ecm_download_file/ECMLP2886733["Notes de version d'ONTAP Select 9.14.1"^].
+
+
+
+== ONTAP Select 9.11.1
+
+Prise en charge améliorée de VMware ESXi:: ONTAP Select 9.11.1 inclut la prise en charge de VMware ESXi 7.0 U3C.
+Prise en charge de VMware NSX-T:: ONTAP Select 9.10.1 et versions ultérieures sont compatibles avec VMware NSX-T version 3.1.2. Il n'y a aucun problème fonctionnel ni aucune déficience lors de l'utilisation de NSX-T avec un cluster ONTAP Select à nœud unique déployé à l'aide d'un fichier OVA et de l'utilitaire d'administration ONTAP Select Deploy. Cependant, lors de l'utilisation de NSX-T avec un cluster ONTAP Select à nœuds multiples, vous devez noter la limitation suivante pour ONTAP Select 9.11.1 :
++
+--
+* vérificateur de connectivité réseau
++
+Le vérificateur de connectivité réseau disponible via le CLI Deploy échoue lorsqu'il est exécuté sur un réseau basé sur NSX-T.
+
+
+
+--
+L'hyperviseur KVM n'est plus pris en charge::
++
+--
+* À partir d'ONTAP Select 9.10.1, vous ne pouvez plus déployer un nouveau cluster sur l'hyperviseur KVM.
+* À partir de ONTAP Select 9.11.1, toute la fonctionnalité de gestion n'est plus disponible pour les clusters et hôtes KVM existants, à l'exception des fonctions de mise hors ligne et de suppression.
++
+NetApp recommande fortement que les clients planifient et exécutent une migration complète des données depuis ONTAP Select for KVM vers toute autre plateforme ONTAP, y compris ONTAP Select for ESXi. Pour plus d'informations, consultez la  https://mysupport.netapp.com/info/communications/ECMLP2877451.html["Avis EOA"^]
+
+
+
+--
+
+
+
+
+== ONTAP Select 9.10.1
+
+Prise en charge de VMware NSX-T:: ONTAP Select 9.10.1 est compatible avec VMware NSX-T version 3.1.2. Il n'y a aucun problème de fonctionnalité ni de défaut lors de l'utilisation de NSX-T avec un cluster ONTAP Select à nœud unique déployé à l'aide d'un fichier OVA et de l'utilitaire d'administration ONTAP Select Deploy. Cependant, lors de l'utilisation de NSX-T avec un cluster ONTAP Select à nœuds multiples, vous devez prendre en compte les exigences et limitations suivantes :
++
+--
+* MTU de cluster
++
+Vous devez ajuster manuellement la taille MTU du cluster à 8800 avant de déployer le cluster afin de tenir compte de la surcharge supplémentaire. La recommandation de VMware est de prévoir une marge de 200 octets lors de l'utilisation de NSX-T.
+
+* Configuration réseau 4x10Gb
++
+Pour les déploiements ONTAP Select sur un hôte VMware ESXi configuré avec quatre cartes réseau, l'utilitaire Deploy vous invite à suivre la bonne pratique consistant à répartir le trafic interne sur deux groupes de ports différents et le trafic externe sur deux groupes de ports différents. Cependant, lorsque vous utilisez un réseau superposé, cette configuration ne fonctionne pas et vous devez ignorer la recommandation. Dans ce cas, vous devez utiliser uniquement un groupe de ports interne et un groupe de ports externe.
+
+* vérificateur de connectivité réseau
++
+Le vérificateur de connectivité réseau disponible via le CLI Deploy échoue lorsqu'il est exécuté sur un réseau basé sur NSX-T.
+
+
+
+--
+L'hyperviseur KVM n'est plus pris en charge:: À partir d'ONTAP Select 9.10.1, il n'est plus possible de déployer un nouveau cluster sur l'hyperviseur KVM. Toutefois, si vous mettez à niveau un cluster depuis une version antérieure vers 9.10.1, vous pouvez toujours utiliser l'utilitaire Deploy pour administrer le cluster.
+
+
+
+
+== ONTAP Select 9.9.1
+
+Prise en charge de la famille de processeurs:: À partir d'ONTAP Select 9.9.1, seuls les modèles de processeur Intel Xeon Sandy Bridge ou ultérieurs sont pris en charge pour ONTAP Select.
+Prise en charge VMware ESXi mise à jour:: La prise en charge de VMware ESXi a été améliorée avec ONTAP Select 9.9.1. Les versions suivantes sont désormais prises en charge :
++
+--
+* ESXi 7.0 U2
+* ESXi 7.0 U1
+
+
+--
+
+
+
+
+== ONTAP Select 9.8
+
+Interface haut débit:: La fonctionnalité d’interface haut débit améliore la connectivité réseau en offrant une option pour les débits 25G (25GbE) et 40G (40GbE). Pour obtenir les meilleures performances lors de l’utilisation de ces vitesses plus élevées, vous devez suivre les bonnes pratiques concernant les configurations de mappage des ports, comme décrit dans la documentation ONTAP Select.
+Prise en charge VMware ESXi mise à jour:: Deux changements ont été apportés à ONTAP Select 9.8 concernant la prise en charge de VMware ESXi.
++
+--
+* ESXi 7.0 est pris en charge (version GA 15843807 et ultérieures)
+* ESXi 6.0 n'est plus pris en charge
+
+
+--
+

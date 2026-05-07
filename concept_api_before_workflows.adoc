@@ -1,0 +1,37 @@
+---
+sidebar: sidebar 
+permalink: concept_api_before_workflows.html 
+keywords: rest api, deploy rest api, rest, workflows, before you begin 
+summary: Vous devez vous préparer à examiner et à utiliser les processus de flux de travail. 
+---
+= Avant d'utiliser les workflows de l'API ONTAP Select Deploy
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Vous devez vous préparer à examiner et à utiliser les processus de flux de travail.
+
+
+
+== Comprendre les appels d'API utilisés dans les flux de travail
+
+La page de documentation en ligne ONTAP Select inclut les détails de chaque appel d'API REST. Plutôt que de répéter ces détails ici, chaque appel d'API utilisé dans les exemples de workflow inclut uniquement les informations nécessaires pour localiser l'appel sur la page de documentation. Après avoir localisé un appel d'API spécifique, vous pouvez consulter tous les détails de l'appel, y compris les paramètres d'entrée, les formats de sortie, les codes d'état HTTP et le type de traitement de la requête.
+
+Les informations suivantes sont incluses pour chaque appel d'API au sein d'un flux de travail afin de faciliter la localisation de l'appel sur la page de documentation :
+
+* Les appels d'API sont organisés sur la page de documentation en domaines ou catégories fonctionnellement liés. Pour trouver un appel d'API spécifique, faites défiler la page jusqu'en bas et cliquez sur la catégorie d'API correspondante.
+* Le verbe HTTP identifie l'action effectuée sur une ressource. Chaque appel d'API est exécuté via un seul verbe HTTP.
+* Le chemin d'accès détermine la ressource spécifique à laquelle l'action s'applique lors d'un appel. La chaîne de caractères du chemin est ajoutée à l'URL principale pour former l'URL complète identifiant la ressource.
+
+
+
+
+== Construisez une URL pour accéder directement à l'API REST
+
+Outre la page de documentation ONTAP Select, vous pouvez également accéder directement à l'API REST Deploy via un langage de programmation tel que Python. Dans ce cas, l'URL principale diffère légèrement de celle utilisée pour accéder à la page de documentation en ligne. Lorsque vous accédez directement à l'API, vous devez ajouter /api à la chaîne de domaine et de port. Par exemple :
+`\http://deploy.mycompany.com/api`

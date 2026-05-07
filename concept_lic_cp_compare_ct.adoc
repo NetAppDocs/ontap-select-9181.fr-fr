@@ -1,0 +1,61 @@
+---
+sidebar: sidebar 
+permalink: concept_lic_cp_compare_ct.html 
+keywords: license, licensing, Capacity Pools, Capacity Tiers, comparing 
+summary: Il existe plusieurs différences entre les modèles de licence Capacity Tiers et Capacity Pools. 
+---
+= Comparer les licences des niveaux de capacité et des pools de capacité ONTAP Select
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Le tableau suivant compare les deux modèles de licences de production pris en charge par ONTAP Select.
+
+[cols="20,40,40"]
+|===
+|  | Niveaux de capacité | Pools de capacité 
+
+
+| numéro de série de la licence | NetApp génère neuf chiffres et les attribue à un nœud | NetApp génère neuf chiffres et les attribue à un pool de capacité 
+
+
+| Verrouillage de licence | Verrouillé sur le nœud ONTAP Select | Verrouillé à l'instance du License Manager 
+
+
+| Durée de la licence | Perpétuel (aucun renouvellement requis) | Durée fixe basée sur l'achat (renouvellement requis) 
+
+
+| Durée de location pour agrégat de données | Non Concerné | Une heure à sept jours 
+
+
+| Numéro de série du nœud | Neuf chiffres et identique au numéro de série de la licence | Vingt chiffres et générés par le gestionnaire de licences 
+
+
+| Support | Supplémentaire et à durée limitée | Inclus et co-terme 
+
+
+| Types de licences | Standard, premium, premium XL | Standard, premium, premium XL 
+
+
+| Licence d'évaluation disponible | Oui | Oui 
+
+
+| Évaluation en vue de la mise à niveau en production | Oui | Non 
+
+
+| Redimensionnement de la machine virtuelle ONTAP Select (petite à moyenne, moyenne à grande) | Oui | Oui 
+
+
+| Application : licence expirée | S/O | Oui (pas de délai de grâce) 
+
+
+| Licence minimale | 1 To | 2 To 
+
+
+| Espace géré maximal | 400 To par nœud | 400 To par nœud 
+|===

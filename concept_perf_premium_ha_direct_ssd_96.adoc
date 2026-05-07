@@ -1,0 +1,141 @@
+---
+sidebar: sidebar 
+permalink: concept_perf_premium_ha_direct_ssd_96.html 
+keywords: ontap select, performance 
+summary: 'Informations sur les performances d"ONTAP Select 9.6 - stockage SSD premium en paire haute disponibilité à connexion directe.' 
+---
+= Performances d'ONTAP Select 9.6 : stockage SSD Premium à connexion directe en paire haute disponibilité
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Informations sur les performances de la plateforme de référence.
+
+
+
+== Plateforme de référence
+
+Matériel ONTAP Select (Premium XL) (par nœud)
+
+* FUJITSU PRIMERGY RX2540 M4 :
++
+** Processeur Intel® Xeon® Gold 6142b à 2,6 GHz
+** 32 cœurs physiques (16 x 2 sockets), 64 cœurs logiques
+** 256 Go de RAM
+** Disques par hôte : 24 SSD de 960 Go
+** ESXi 6.5U1
+
+
+
+
+Matériel client
+
+* 5 clients NFSv3 IBM 3550m4
+
+
+Informations de configuration
+
+* RAID logiciel 1 x 9 + 2 RAID-DP (11 disques)
+* RAID-5 22+1 (RAID-0 dans ONTAP) / cache RAID NVRAM
+* Aucune fonctionnalité d'efficacité du stockage n'est utilisée (compression, déduplication, copies Snapshot, SnapMirror, etc.)
+
+
+Le tableau suivant présente le débit mesuré en fonction des charges de travail de lecture/écriture sur une paire haute disponibilité (HA) de nœuds ONTAP Select utilisant à la fois le RAID logiciel et le RAID matériel. Les mesures de performance ont été effectuées à l'aide de l'outil de génération de charge SIO.
+
+
+NOTE: Ces chiffres de performance sont basés sur ONTAP Select 9.6.
+
+*Résultats de performance pour un nœud unique (faisant partie d'un cluster ONTAP Select à quatre nœuds, instance moyenne) sur un SSD de stockage à connexion directe (DAS), avec RAID logiciel et RAID matériel*
+
+[cols="6*"]
+|===
+| Description | Lecture séquentielle 64KiB | Écriture séquentielle 64 Kio | Lecture aléatoire 8KiB | Écriture aléatoire 8KiB | WR/RD aléatoire (50/50) 8KiB 
+
+
+| Instance ONTAP Select de grande taille avec RAID logiciel DAS (SSD) | 2171 MiBps | 559 MiBps | 954 MiBps | 394 MiBps | 564 MiBps 
+
+
+| ONTAP Select instance de taille moyenne avec DAS (SSD) RAID logiciel | 2090MiBps | 592 MiBps | 677 MiBps | 335 MiBps | 441 3 Mio/s 
+
+
+| Instance ONTAP Select de taille moyenne avec RAID matériel DAS (SSD) | 2038 MiBps | 520 MiBps | 578 MiBps | 325 MiBps | 399 MiBps 
+|===
+
+
+=== lecture séquentielle de 64K
+
+Détails :
+
+* E/S direct SIO activée
+* 2 nœuds
+* 2 cartes réseau de données par nœud
+* 1 agrégat de données par nœud (RAID matériel de 2 To), (RAID logiciel de 8 To)
+* 64 processus SIO, 1 thread par processus
+* 32 volumes par nœud
+* 1 fichier par processeur ; les fichiers font chacun 12000 Mo
+
+
+
+
+=== écriture séquentielle de 64K
+
+Détails :
+
+* E/S direct SIO activée
+* 2 nœuds
+* 2 cartes d'interface réseau (NIC) par nœud
+* 1 agrégat de données par nœud (RAID matériel de 2 To), (RAID logiciel de 4 To)
+* 128 processus SIO, 1 thread par processus
+* Volumes par nœud : 32 (RAID matériel), 16 (RAID logiciel)
+* 1 fichier par processeur ; les fichiers font chacun 30720 Mo
+
+
+
+
+=== 8K lecture aléatoire
+
+Détails :
+
+* E/S direct SIO activée
+* 2 nœuds
+* 2 cartes réseau de données par nœud
+* 1 agrégat de données par nœud (RAID matériel de 2 To), (RAID logiciel de 4 To)
+* 64 processus SIO, 8 threads par processus
+* Volumes par nœud : 32
+* 1 fichier par processeur ; les fichiers font chacun 12228 Mo
+
+
+
+
+=== écriture aléatoire 8K
+
+Détails :
+
+* E/S direct SIO activée
+* 2 nœuds
+* 2 cartes réseau de données par nœud
+* 1 agrégat de données par nœud (RAID matériel de 2 To), (RAID logiciel de 4 To)
+* 64 processus SIO, 8 threads par processus
+* Volumes par nœud : 32
+* 1 fichier par processeur ; les fichiers font chacun 8192 Mo
+
+
+
+
+=== 8K aléatoire 50% écriture 50% lecture
+
+Détails :
+
+* E/S direct SIO activée
+* 2 nœuds
+* 2 cartes réseau de données par nœud
+* 1 agrégat de données par nœud (RAID matériel de 2 To), (RAID logiciel de 4 To)
+* 64 threads SIO proc208 par proc
+* Volumes par nœud : 32
+* 1 fichier par processeur ; les fichiers font chacun 12228 Mo
+

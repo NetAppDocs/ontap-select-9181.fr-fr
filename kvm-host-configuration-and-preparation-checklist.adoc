@@ -1,0 +1,333 @@
+---
+sidebar: sidebar 
+permalink: kvm-host-configuration-and-preparation-checklist.html 
+keywords: ontap select, pre-installation checklist, kvm, host preparation 
+summary: Préparez chaque hôte hyperviseur KVM sur lequel un nœud ONTAP Select est déployé. Lors de la préparation des hôtes, évaluez soigneusement l’environnement de déploiement afin de vous assurer que les hôtes sont correctement configurés et prêts à prendre en charge le déploiement d’un cluster ONTAP Select. 
+---
+= Liste de contrôle de configuration et de préparation de l'hôte KVM pour ONTAP Select
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Préparez chaque hôte hyperviseur KVM sur lequel un nœud ONTAP Select est déployé. Lors de la préparation des hôtes, évaluez soigneusement l’environnement de déploiement afin de vous assurer que les hôtes sont correctement configurés et prêts à prendre en charge le déploiement d’un cluster ONTAP Select.
+
+
+NOTE: L'utilitaire d'administration ONTAP Select Deploy ne réalise pas la configuration requise du réseau et du stockage des hôtes hyperviseur. Vous devez préparer manuellement chaque hôte avant de déployer un cluster ONTAP Select.
+
+
+
+== Étape 1 : Préparer l’hôte hyperviseur KVM
+
+Vous devez préparer chacun des serveurs Linux KVM sur lesquels un nœud ONTAP Select est déployé. Vous devez également préparer le serveur sur lequel l'utilitaire d'administration ONTAP Select Deploy est déployé.
+
+.Étapes
+. Installez Red Hat Enterprise Linux (RHEL).
++
+Installez le système d'exploitation RHEL à l'aide de l'image ISO. Consultez la link:reference_plan_ots_hardware.html#software-compatibility["Informations de compatibilité logicielle pour les hyperviseurs"] pour obtenir la liste des versions de RHEL prises en charge. Lors de l'installation, configurez le système comme suit :
+
++
+.. Sélectionnez Default comme stratégie de sécurité.
+.. Choisissez la sélection du logiciel hôte virtualisé.
+.. Vérifiez que la destination est le disque de démarrage local et non un LUN RAID utilisé par ONTAP Select.
+.. Vérifiez que l'interface de gestion de l'hôte est opérationnelle après le démarrage du système.
++
+
+NOTE: Vous pouvez modifier le fichier de configuration réseau correct sous /etc/sysconfig/network-scripts, puis activer l’interface à l’aide de la commande  `ifup`.
+
+
+
+. Installez les packages supplémentaires requis pour ONTAP Select.
++
+ONTAP Select requiert plusieurs logiciels supplémentaires. La liste exacte des packages varie selon la version de Linux que vous utilisez. Commencez par vérifier que le dépôt yum est disponible sur votre serveur. S'il n'est pas disponible, vous pouvez le récupérer à l'aide de la commande  `wget your_repository_location`.
+
++
+
+NOTE: Certains paquets requis peuvent déjà être installés si vous avez choisi l'option « Hôte virtualisé » lors de la sélection des logiciels pendant l'installation du serveur Linux. Il se peut que vous deviez installer le paquet openvswitch à partir du code source, comme décrit dans le link:https://docs.openvswitch.org/en/latest/intro/install/general/["Ouvrir la documentation vSwitch"^].
+
++
+Pour plus d'informations sur les paquets nécessaires et les autres exigences de configuration, reportez-vous au link:https://imt.netapp.com/matrix/#welcome["Outil Interoperability Matrix Tool"^].
+
+. Configurer le transfert PCI pour les disques NVMe.
++
+Si votre configuration utilise des disques NVMe, vous devez configurer le transfert PCI (DirectPath IO) pour permettre à l'hôte KVM d'accéder directement aux disques NVMe connectés localement dans le cluster ONTAP Select. Vous avez besoin d'un accès direct pour effectuer les tâches suivantes :
+
++
+** link:task_chk_nvme_configure.html["Configurez l'hôte KVM pour utiliser des disques NVMe"]
+** link:concept_stor_swraid_local.html["Utilisez le RAID logiciel après le déploiement du cluster"]
+
+
++
+Consultez le link:https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/5/html/virtualization/chap-virtualization-pci_passthrough#sect-Virtualization-PCI_passthrough-AI_device_to_a_host["Documentation Red Hat"^] pour obtenir des instructions sur la façon de configurer le PCI passthrough (DirectPath IO) pour un hyperviseur KVM.
+
+. Configurez les pools de stockage.
++
+Un pool de stockage ONTAP Select est un container de données logique qui masque le stockage physique sous-jacent. Vous devez gérer les pools de stockage sur les hôtes KVM où ONTAP Select est déployé.
+
+
+
+
+
+== Étape 2 : Créer un pool de stockage
+
+Créez au moins un pool de stockage sur chaque nœud ONTAP Select. Si vous utilisez un RAID logiciel au lieu d'un RAID matériel local, les disques de stockage sont rattachés au nœud pour la racine et les agrégats de données. Dans ce cas, vous devez également créer un pool de stockage pour les données système.
+
+.Avant de commencer
+Vérifiez que vous pouvez vous connecter à l'interface de ligne de commande Linux sur l'hôte où ONTAP Select est déployé.
+
+.À propos de cette tâche
+L'utilitaire d'administration ONTAP Select Deploy attend que l'emplacement cible du pool de stockage soit spécifié comme  `/dev/<pool_name>`, où  `<pool_name>` est un nom de pool unique sur l'hôte.
+
+
+NOTE: La capacité totale du LUN est allouée lors de la création d'un pool de stockage.
+
+.Étapes
+. Afficher les périphériques locaux sur l'hôte Linux et choisir le LUN qui contiendra le pool de stockage :
++
+[source, cli]
+----
+lsblk
+----
++
+Le LUN approprié sera probablement celui qui possède la plus grande capacité de stockage.
+
+. Définissez le pool de stockage sur le périphérique :
++
+[source, cli]
+----
+virsh pool-define-as <pool_name> logical --source-dev <device_name> --target=/dev/<pool_name>
+----
++
+Par exemple :
+
++
+[listing]
+----
+virsh pool-define-as select_pool logical --source-dev /dev/sdb --target=/dev/select_pool
+----
+. Constituer le pool de stockage :
++
+[source, cli]
+----
+virsh pool-build <pool_name>
+----
+. Démarrer le pool de stockage :
++
+[source, cli]
+----
+virsh pool-start <pool_name>
+----
+. Configurez le pool de stockage pour qu'il démarre automatiquement au démarrage du système :
++
+[source, cli]
+----
+virsh pool-autostart <pool_name>
+----
+. Vérifiez que le pool de stockage a bien été créé :
++
+[source, cli]
+----
+virsh pool-list
+----
+
+
+
+
+== Étape 3 : Supprimez éventuellement un pool de stockage
+
+Vous pouvez supprimer un pool de stockage lorsqu'il n'est plus nécessaire.
+
+.Avant de commencer
+Vérifiez que vous pouvez vous connecter à l'interface de ligne de commande Linux où ONTAP Select est déployé.
+
+.À propos de cette tâche
+L'utilitaire d'administration ONTAP Select Deploy attend que l'emplacement cible du pool de stockage soit spécifié comme  `/dev/<pool_name>`, où  `<pool_name>` est un nom de pool unique sur l'hôte.
+
+.Étapes
+. Vérifiez que le pool de stockage est défini :
++
+[source, cli]
+----
+virsh pool-list
+----
+. Détruisez le pool de stockage :
++
+[source, cli]
+----
+virsh pool-destroy <pool_name>
+----
+. Annuler la configuration du pool de stockage inactif :
++
+[source, cli]
+----
+virsh pool-undefine <pool_nanme>
+----
+. Vérifiez que le pool de stockage a été supprimé de l'hôte :
++
+[source, cli]
+----
+virsh pool-list
+----
+. Vérifiez que tous les volumes logiques du groupe de volumes du pool de stockage ont été supprimés.
++
+.. Afficher les volumes logiques :
++
+[source, cli]
+----
+lvs
+----
+.. Si des volumes logiques existent pour le pool, supprimez-les :
++
+[source, cli]
+----
+lvremove <logical_volume_name>
+----
+
+
+. Vérifiez que le groupe de volumes a été supprimé :
++
+.. Afficher les groupes de volumes :
++
+[source, cli]
+----
+vgs
+----
+.. S'il existe un groupe de volumes pour le pool, supprimez-le :
++
+[source, cli]
+----
+vgremove <volume_group_name>
+----
+
+
+. Vérifiez que le volume physique a bien été supprimé :
++
+.. Afficher les volumes physiques :
++
+[source, cli]
+----
+pvs
+----
+.. Si un volume physique existe pour le pool, supprimez-le :
++
+[source, cli]
+----
+pvremove <physical_volume_name>
+----
+
+
+
+
+
+
+== Étape 4 : Examiner la configuration du cluster ONTAP Select
+
+Vous pouvez déployer ONTAP Select sous forme de cluster multinœud ou de cluster mononœud. Dans de nombreux cas, un cluster multinœud est préférable en raison du stockage supplémentaire et de la capacité de haute disponibilité (HA).
+
+Les figures suivantes illustrent les réseaux ONTAP Select utilisés avec un cluster à nœud unique et un cluster à quatre nœuds pour un hôte ESXi.
+
+[role="tabbed-block"]
+====
+.Cluster à nœud unique
+--
+La figure suivante illustre un cluster à nœud unique. Le réseau externe transporte le trafic client, de gestion et de réplication inter-clusters (SnapMirror/SnapVault).
+
+image:CHK_01.jpg["Cluster à nœud unique affichant un réseau"]
+
+--
+.Cluster à quatre nœuds
+--
+La figure suivante illustre un cluster à quatre nœuds présentant deux réseaux. Le réseau interne assure la communication entre les nœuds pour prendre en charge les services réseau du cluster ONTAP. Le réseau externe transporte le trafic client, de gestion et de réplication inter-clusters (SnapMirror/SnapVault).
+
+image:CHK_02.jpg["Cluster à quatre nœuds montrant deux réseaux"]
+
+--
+.Nœud unique au sein d'un cluster de quatre nœuds
+--
+La figure suivante illustre la configuration réseau typique d'une machine virtuelle ONTAP Select unique au sein d'un cluster à quatre nœuds. On distingue deux réseaux : ONTAP-interne et ONTAP-externe.
+
+image:CHK_03.jpg["Nœud unique au sein d'un cluster de quatre nœuds"]
+
+--
+====
+
+
+== Étape 5 : Configurer Open vSwitch
+
+Utilisez Open vSwitch pour configurer un commutateur défini par logiciel sur chaque nœud hôte KVM.
+
+.Avant de commencer
+Vérifiez que le gestionnaire de réseau est désactivé et que le service réseau Linux natif est activé.
+
+.À propos de cette tâche
+ONTAP Select nécessite deux réseaux distincts, qui utilisent tous deux l'agrégation de ports pour assurer la haute disponibilité des réseaux.
+
+.Étapes
+. Vérifiez que Open vSwitch est actif sur l'hôte :
++
+.. Déterminez si Open vSwitch est en cours d'exécution :
++
+[source, cli]
+----
+systemctl status openvswitch
+----
+.. Si Open vSwitch n'est pas en cours d'exécution, démarrez-le :
++
+[source, cli]
+----
+systemctl start openvswitch
+----
+
+
+. Afficher la configuration Open vSwitch :
++
+[source, cli]
+----
+ovs-vsctl show
+----
++
+La configuration apparaît vide si Open vSwitch n'a pas déjà été configuré sur l'hôte.
+
+. Ajouter une nouvelle instance vSwitch :
++
+[source, cli]
+----
+ovs-vsctl add-br <bridge_name>
+----
++
+Par exemple :
+
++
+[source, cli]
+----
+ovs-vsctl add-br ontap-br
+----
+. Désactivez les interfaces réseau :
++
+[source, cli]
+----
+ifdown <interface_1>
+ifdown <interface_2>
+----
+. Combinez les liens à l'aide du protocole Link Aggregation Control Protocol (LACP) :
++
+[source, cli]
+----
+ovs-vsctl add-bond <internal_network> bond-br <interface_1> <interface_2> bond_mode=balance-slb lacp=active other_config:lacp-time=fast
+----
++
+
+NOTE: Vous n'avez besoin de configurer une agrégation que s'il existe plus d'une interface.
+
+. Activez les interfaces réseau :
++
+[source, cli]
+----
+ifup <interface_1>
+ifup <interface_2>
+----
+

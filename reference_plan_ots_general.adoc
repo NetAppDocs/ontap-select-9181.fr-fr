@@ -1,0 +1,185 @@
+---
+sidebar: sidebar 
+permalink: reference_plan_ots_general.html 
+keywords: plan, planning, general requirements 
+summary: 'Plusieurs exigences générales doivent être prises en compte lors de la planification d"un déploiement ONTAP Select.' 
+---
+= Exigences et considérations de planification pour ONTAP Select
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Plusieurs exigences générales sont à prendre en compte lors de la planification d'un déploiement ONTAP Select.
+
+
+
+== Connaissances et compétences Linux requises pour KVM
+
+Linux avec l'hyperviseur KVM est un environnement complexe dans lequel travailler. Avant de déployer ONTAP Select sur KVM, vous devez posséder les connaissances et les compétences nécessaires.
+
+Distribution serveur Linux:: Vous devez posséder une expérience avec la distribution Linux spécifique qui sera utilisée pour votre déploiement ONTAP Select. Plus précisément, vous devez être capable d’effectuer les tâches suivantes :
++
+--
+* Installez la distribution Linux
+* Configurez le système à l'aide de l'interface de ligne de commande (CLI)
+* Ajoutez les paquets logiciels ainsi que toutes les dépendances
+
+
+--
+
+
+Pour plus d'informations sur la préparation de votre serveur Linux, notamment la configuration requise et les paquets logiciels, consultez la link:kvm-host-configuration-and-preparation-checklist.html["liste de contrôle de configuration de l'hôte"]. Consultez les exigences de l'hyperviseur pour les distributions Linux actuellement prises en charge.
+
+Déploiement et administration KVM:: Vous devez maîtriser les concepts généraux de virtualisation. De plus, plusieurs commandes CLI Linux sont nécessaires pour installer et administrer ONTAP Select dans un environnement KVM :
++
+--
+* `virt-install`
+* `virsh`
+* `lsblk`
+* `lvs`
+* `vgs`
+* `pvs`
+
+
+--
+Réseautage et configuration Open vSwitch:: Vous devez maîtriser les concepts de mise en réseau et la configuration des commutateurs réseau. De plus, vous devez avoir de l'expérience avec Open vSwitch. Vous devez utiliser les commandes réseau suivantes dans le cadre de la configuration du réseau ONTAP Select dans un environnement KVM :
++
+--
+* `ovs-vsctl`
+* `ip`
+* `ip link`
+* `systemctl`
+
+
+--
+
+
+
+
+== Taille du cluster et considérations connexes
+
+Il existe plusieurs questions de planification liées à la taille du cluster que vous devez prendre en compte.
+
+Nombre de nœuds dans le cluster:: Un cluster ONTAP Select est composé d’un, deux, quatre, six, huit, dix ou douze nœuds. Vous devez déterminer la taille du cluster en fonction des exigences des applications. Par exemple, si la capacité HA est nécessaire pour un déploiement en entreprise, alors un cluster multi-nœuds doit être utilisé.
+Dédié versus colocalisé:: En fonction du type d'application, il convient de déterminer si le déploiement suit le modèle dédié ou colocalisé. Notez que le modèle colocalisé peut s'avérer plus complexe en raison de la diversité des charges de travail et d'une intégration plus poussée.
+
+
+
+
+== Considérations relatives à l'hôte de l'hyperviseur
+
+Il existe plusieurs points de planification relatifs à l'hôte de l'hyperviseur que vous devriez prendre en compte.
+
+
+CAUTION: Vous ne devez pas modifier directement la configuration d'une machine virtuelle ONTAP Select, sauf indication contraire du support NetApp. Une machine virtuelle ne doit être configurée et modifiée que via l'utilitaire d'administration Deploy. Apporter des modifications à une machine virtuelle ONTAP Select en dehors de l'utilitaire Deploy, sans l'assistance du support NetApp, peut entraîner une défaillance de la machine virtuelle et la rendre inutilisable.
+
+Hyperviseur indépendant:: ONTAP Select et l'utilitaire d'administration ONTAP Select Deploy sont tous deux indépendants de l'hyperviseur. Les hyperviseurs suivants sont pris en charge pour les deux.
++
+--
+* VMware ESXi
+* Machine virtuelle basée sur le noyau (KVM)
+
+
+--
+
+
+
+NOTE: À compter d'ONTAP Select 9.14.1, la prise en charge de l'hyperviseur KVM a été rétablie. Auparavant, la prise en charge du déploiement d'un nouveau cluster sur un hyperviseur KVM avait été supprimée dans ONTAP Select 9.10.1 et la prise en charge de la gestion des clusters et hôtes KVM existants, à l'exception de la mise hors ligne ou de la suppression, avait été supprimée dans ONTAP Select 9.11.1.
+
+Veuillez vous référer aux informations de planification spécifiques à l'hyperviseur et link:reference_release_notes.html["notes de version"] pour des détails supplémentaires concernant les plateformes prises en charge.
+
+Hyperviseur pour les nœuds ONTAP Select et utilitaire d'administration:: L'utilitaire d'administration Deploy et les nœuds ONTAP Select s'exécutent tous deux en tant que machines virtuelles. L'hyperviseur que vous choisissez pour l'utilitaire Deploy est indépendant de l'hyperviseur que vous choisissez pour les nœuds ONTAP Select. Vous disposez d'une flexibilité totale quant à l'association des deux :
++
+--
+* L'utilitaire de déploiement exécuté sur VMware ESXi peut créer et gérer des clusters ONTAP Select sur VMware ESXi ou KVM
+* L'utilitaire de déploiement exécuté sur KVM peut créer et gérer des clusters ONTAP Select sur VMware ESXi ou KVM
+
+
+--
+Une ou plusieurs instances de nœud ONTAP Select par hôte:: Chaque nœud ONTAP Select s'exécute comme une machine virtuelle dédiée. Vous pouvez créer plusieurs nœuds sur le même hôte hyperviseur, sous réserve des restrictions suivantes :
++
+--
+* Plusieurs nœuds d'un même cluster ONTAP Select ne peuvent pas s'exécuter sur le même hôte. Tous les nœuds d'un hôte donné doivent appartenir à des clusters ONTAP Select différents.
+* Vous devez utiliser un stockage externe.
+* Si vous utilisez un RAID logiciel, vous ne pouvez déployer qu'un seul nœud ONTAP Select sur l'hôte.
+
+
+--
+Cohérence de l'hyperviseur pour les nœuds au sein d'un cluster:: Tous les hôtes d'un cluster ONTAP Select doivent exécuter la même version et la même mise à jour du logiciel hyperviseur.
+Nombre de ports physiques sur chaque hôte:: Vous devez configurer chaque hôte pour utiliser un, deux ou quatre ports physiques. Bien que vous ayez une certaine flexibilité lors de la configuration des ports réseau, il est conseillé de suivre ces recommandations dans la mesure du possible :
++
+--
+* Un hôte dans un cluster à nœud unique doit disposer de deux ports physiques.
+* Chaque hôte d'un cluster multi-nœuds doit avoir quatre ports physiques
+
+
+--
+Intégration d'ONTAP Select avec un cluster ONTAP basé sur du matériel:: Vous ne pouvez pas ajouter un nœud ONTAP Select directement à un cluster ONTAP basé sur du matériel. Cependant, vous pouvez éventuellement établir une relation de peering de cluster entre un cluster ONTAP Select et un cluster ONTAP basé sur du matériel.
+
+
+
+
+== Considérations relatives au stockage
+
+Il existe plusieurs points de planification relatifs au stockage hôte que vous devriez prendre en compte.
+
+Type de RAID:: Lors de l'utilisation d'un stockage à connexion directe (DAS) sur ESXi, vous devez choisir entre un contrôleur RAID matériel local ou la fonctionnalité RAID logicielle incluse dans ONTAP Select. Si vous optez pour le RAID logiciel, consultez link:reference_plan_ots_storage.html["Considérations relatives au stockage et au RAID"] pour plus d'informations.
+stockage local:: Lorsque vous utilisez un stockage local géré par un contrôleur RAID, vous devez décider des points suivants :
++
+--
+* Utiliser un ou plusieurs groupes RAID
+* Utiliser une ou plusieurs LUN
+
+
+--
+stockage externe:: Lorsque vous utilisez la solution ONTAP Select vNAS, vous devez définir l'emplacement des datastores distants et leur mode d'accès. ONTAP Select vNAS prend en charge les configurations suivantes :
++
+--
+* VMware vSAN
+* baie de stockage externe générique
+
+
+--
+Estimation des besoins de stockage:: Vous devez déterminer la capacité de stockage requise pour les nœuds ONTAP Select. Cette information est nécessaire dans le cadre de l'acquisition des licences achetées avec capacité de stockage. Consultez la section Restrictions de capacité de stockage pour plus d'informations.
+
+
+
+NOTE: La capacité de stockage ONTAP Select correspond à la taille totale autorisée des disques de données connectés à la machine virtuelle ONTAP Select.
+
+Modèle de licence pour le déploiement en production:: Vous devez sélectionner le modèle de licence « Niveaux de capacité » ou « Pools de capacité » pour chaque cluster ONTAP Select déployé en production. Consultez la section _License_ pour plus d'informations.
+
+
+
+
+== Authentification à l'aide du magasin d'identifiants
+
+Le magasin d'identifiants ONTAP Select Deploy est une base de données contenant les informations de compte. Deploy utilise les identifiants de compte pour effectuer l'authentification de l'hôte lors de la création et de la gestion du cluster. Vous devez savoir comment le magasin d'identifiants est utilisé lors de la planification d'un déploiement ONTAP Select.
+
+
+NOTE: Les informations du compte sont stockées en toute sécurité dans la base de données à l'aide de l'algorithme de chiffrement Advanced Encryption Standard (AES) et de l'algorithme de hachage SHA-256.
+
+Types d'identifiants:: Les types d'identifiants suivants sont pris en charge :
++
+--
+* hôte
++
+L’identifiant *host* est utilisé pour authentifier un hôte hyperviseur dans le cadre du déploiement d’un nœud ONTAP Select directement sur ESXi ou KVM.
+
+* vcenter
++
+L’identifiant *vcenter* est utilisé pour authentifier un serveur vCenter dans le cadre du déploiement d’un nœud ONTAP Select sur ESXi lorsque l’hôte est géré par VMware vCenter.
+
+
+
+--
+Accéder:: Le magasin d'identifiants est accessible en interne dans le cadre de l'exécution des tâches d'administration courantes avec Deploy, telles que l'ajout d'un hôte hyperviseur. Vous pouvez également gérer le magasin d'identifiants directement via l'interface web et la CLI de Deploy.
+
+
+.Informations connexes
+* link:reference_plan_ots_storage.html["Considérations relatives au stockage et au RAID"]
+

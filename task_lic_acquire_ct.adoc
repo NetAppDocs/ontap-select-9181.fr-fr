@@ -1,0 +1,45 @@
+---
+sidebar: sidebar 
+permalink: task_lic_acquire_ct.html 
+keywords: license, licensing, acquire, Capacity Tiers 
+summary: 'Lors de l"utilisation du modèle de licence Capacity Tiers, vous devez acquérir un fichier de licence pour chaque nœud ONTAP Select. Le fichier de licence définit la capacité de stockage du nœud et est lié à celui-ci par le numéro de série unique à neuf chiffres attribué par NetApp.' 
+---
+= Acquérir une licence ONTAP Select Capacity Tier
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Lors de l'utilisation du modèle de licence Capacity Tiers, vous devez acquérir un fichier de licence pour chaque nœud ONTAP Select. Le fichier de licence définit la capacité de stockage du nœud et est lié à celui-ci par le numéro de série unique à neuf chiffres attribué par NetApp.
+
+.Avant de commencer
+* Vous devez disposer du numéro de série de licence à neuf chiffres attribué au nœud ONTAP Select par NetApp.
+* Vous devez attendre au moins 24 heures après la date d'expédition de votre commande avant d'acquérir un fichier de licence.
+* Vous avez examiné le link:sizing-capacity-tier-license.html["considérations pour le dimensionnement d'une licence Capacity Tiers"].
+
+
+.À propos de cette tâche
+Vous devez effectuer cette tâche pour chaque nœud ONTAP Select nécessitant une licence Capacity Tiers.
+
+.Étapes
+. link:https://register.netapp.com/register/getlicensefile["Accédez au site de licences ONTAP Select"^].
+. Sign in à l'aide de vos identifiants de compte NetApp.
+. Sur la page *Générateur de licences*, sélectionnez l’offre de licence souhaitée dans la liste déroulante.
+. Remplissez les champs restants sur la page *License Generator*, y compris le *Product Serial #*.
++
+Le « numéro de série du produit » est le numéro de série du nœud ONTAP Select.
+
+. Sélectionnez *Soumettre*.
+. Une fois la demande validée, sélectionnez le mode de livraison de la licence.
++
+Vous pouvez sélectionner soit *Télécharger la licence* soit *Envoyer la licence par e-mail*.
+
+. Confirmez que vous avez reçu le fichier de licence selon le mode de livraison que vous avez sélectionné.
+
+
+.Après avoir terminé
+Vous devez télécharger le fichier de licence dans l'utilitaire d'administration Deploy avant qu'il puisse être appliqué à un nœud ONTAP Select.

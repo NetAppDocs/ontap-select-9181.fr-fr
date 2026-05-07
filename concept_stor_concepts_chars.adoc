@@ -1,0 +1,180 @@
+---
+sidebar: sidebar 
+permalink: concept_stor_concepts_chars.html 
+keywords: ontap select, storage concepts 
+summary: 'Découvrez les concepts généraux de stockage qui s"appliquent à l"environnement ONTAP Select avant d"explorer les composants de stockage spécifiques.' 
+---
+= Stockage ONTAP Select : concepts généraux et caractéristiques
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Découvrez les concepts généraux de stockage qui s'appliquent à l'environnement ONTAP Select avant d'explorer les composants de stockage spécifiques.
+
+
+
+== Phases de configuration du stockage
+
+Les principales phases de configuration du stockage hôte ONTAP Select comprennent les éléments suivants :
+
+* Prérequis avant déploiement
++
+** Assurez-vous que chaque hôte hyperviseur est configuré et prêt pour un déploiement ONTAP Select.
+** La configuration comprend les disques physiques, les contrôleurs RAID et groupes RAID, les LUN, ainsi que la préparation du réseau associé.
+** Cette configuration est effectuée en dehors d'ONTAP Select.
+
+
+* Configuration à l'aide de l'utilitaire d'administration de l'hyperviseur
++
+** Vous pouvez configurer certains aspects du stockage à l'aide de l'utilitaire d'administration de l'hyperviseur (par exemple, vSphere dans un environnement VMware).
+** Cette configuration est effectuée en dehors d'ONTAP Select.
+
+
+* Configuration à l'aide de l'utilitaire d'administration ONTAP Select Deploy
++
+** Vous pouvez utiliser l'utilitaire d'administration Deploy pour configurer les structures de stockage logique de base.
+** Cela se fait soit explicitement via des commandes CLI, soit automatiquement par l'utilitaire dans le cadre d'un déploiement.
+
+
+* Configuration post-déploiement
++
+** Une fois le déploiement d'ONTAP Select terminé, vous pouvez configurer le cluster à l'aide de l'interface de ligne de commande ONTAP ou de System Manager.
+** Cette configuration est effectuée en dehors d'ONTAP Select Deploy.
+
+
+
+
+
+
+== Stockage géré versus stockage non géré
+
+Le stockage auquel ONTAP Select accède et qu'il contrôle directement est un stockage géré. Tout autre stockage sur le même hôte hyperviseur est un stockage non géré.
+
+
+
+=== stockage physique homogène
+
+Tous les disques physiques composant le stockage géré ONTAP Select doivent être homogènes. Autrement dit, tout le matériel doit être identique en ce qui concerne les caractéristiques suivantes :
+
+* Type (SAS, NL-SAS, SATA, SSD)
+* Vitesse (tr/min)
+
+
+
+
+== Illustration de l'environnement de stockage local
+
+Chaque hôte hyperviseur contient des disques locaux et d'autres composants de stockage logique pouvant être utilisés par ONTAP Select. Ces composants de stockage sont organisés en une structure en couches, à partir du disque physique.
+
+image:ST_01.jpg["environnement de stockage local"]
+
+
+
+=== Caractéristiques des composants de stockage local
+
+Plusieurs concepts s'appliquent aux composants de stockage local utilisés dans un environnement ONTAP Select. Vous devez être familiarisé avec ces concepts avant de préparer un déploiement ONTAP Select. Ces concepts sont classés par catégorie : groupes RAID et LUN, pools de stockage et disques virtuels.
+
+
+
+==== Regroupement des disques physiques en groupes RAID et en LUN
+
+Un ou plusieurs disques physiques peuvent être connectés localement au serveur hôte et mis à disposition pour ONTAP Select. Les disques physiques sont affectés à des groupes RAID, qui sont ensuite présentés au système d'exploitation hôte de l'hyperviseur comme une ou plusieurs LUN. Chaque LUN est présentée au système d'exploitation hôte de l'hyperviseur comme un disque dur physique.
+
+Lors de la configuration d'un hôte ONTAP Select, vous devez tenir compte des points suivants :
+
+* Tout le stockage géré doit être accessible via un seul contrôleur RAID
+* Selon le fournisseur, chaque contrôleur RAID prend en charge un nombre maximal de disques par groupe RAID
+
+
+
+
+==== Un ou plusieurs groupes RAID
+
+Chaque hôte ONTAP Select doit disposer d'un seul contrôleur RAID. Il est recommandé de créer un seul groupe RAID pour ONTAP Select. Cependant, dans certaines situations, vous pouvez envisager de créer plus d'un groupe RAID. Reportez-vous à link:reference_plan_best_practices.html["Résumé des meilleures pratiques"].
+
+
+
+=== Considérations relatives au pool de stockage
+
+Plusieurs points relatifs aux pools de stockage doivent être pris en compte lors de la préparation du déploiement ONTAP Select.
+
+
+NOTE: Dans un environnement VMware, un pool de stockage est synonyme de datastore VMware.
+
+
+
+==== Pools de stockage et LUNs
+
+Chaque LUN est considérée comme un disque local sur l'hôte hyperviseur et peut faire partie d'un pool de stockage. Chaque pool de stockage est formaté avec un système de fichiers que le système d'exploitation de l'hôte hyperviseur peut utiliser.
+
+Vous devez vous assurer que les pools de stockage sont correctement créés dans le cadre d’un déploiement ONTAP Select. Vous pouvez créer un pool de stockage à l’aide de l’outil d’administration de l’hyperviseur. Par exemple, avec VMware, vous pouvez utiliser le client vSphere pour créer un pool de stockage. Le pool de stockage est ensuite transmis à l’utilitaire d’administration ONTAP Select Deploy.
+
+
+
+=== Gérer les disques virtuels sur ESXi
+
+Plusieurs points relatifs aux disques virtuels doivent être pris en compte lors de la préparation du déploiement ONTAP Select.
+
+
+
+==== disques virtuels et systèmes de fichiers
+
+La machine virtuelle ONTAP Select se voit allouer plusieurs disques virtuels. Chaque disque virtuel correspond en réalité à un fichier contenu dans un pool de stockage et est géré par l'hyperviseur. Il existe plusieurs types de disques utilisés par ONTAP Select, principalement des disques système et des disques de données.
+
+Vous devez également prendre en compte les points suivants concernant les disques virtuels :
+
+* Le pool de stockage doit être disponible avant que les disques virtuels puissent être créés.
+* Les disques virtuels ne peuvent pas être créés avant la création de la machine virtuelle.
+* Vous devez utiliser l'utilitaire d'administration ONTAP Select Deploy pour créer tous les disques virtuels (c'est-à-dire qu'un administrateur ne doit jamais créer de disque virtuel en dehors de l'utilitaire Deploy).
+
+
+
+
+==== Configuration des disques virtuels
+
+Les disques virtuels sont gérés par ONTAP Select. Ils sont créés automatiquement lors de la création d'un cluster à l'aide de l'utilitaire d'administration Deploy.
+
+
+
+== Illustration de l'environnement de stockage externe sur ESXi
+
+La solution ONTAP Select vNAS permet à ONTAP Select d'utiliser des banques de données résidant sur un stockage externe à l'hôte de l'hyperviseur. Les banques de données peuvent être accessibles via le réseau à l'aide de VMware vSAN ou directement sur une baie de stockage externe.
+
+ONTAP Select peut être configuré pour utiliser les types suivants de banques de données réseau VMware ESXi qui sont externes à l'hyperviseur hôte :
+
+* vSAN (Virtual SAN)
+* VMFS
+* NFS
+
+
+
+
+=== banques de données vSAN
+
+Chaque hôte ESXi peut disposer d'une ou plusieurs banques de données VMFS locales. Normalement, ces banques de données ne sont accessibles qu'à l'hôte local. Cependant, VMware vSAN permet à chaque hôte d'un cluster ESXi de partager toutes les banques de données du cluster comme s'il s'agissait de banques locales. La figure suivante illustre comment vSAN crée un pool de banques de données partagées entre les hôtes du cluster ESXi.
+
+image:ST_02.jpg["Cluster ESXi"]
+
+
+
+=== Magasin de données VMFS sur baie de stockage externe
+
+Vous pouvez créer une banque de données VMFS sur une baie de stockage externe. Le stockage est accessible à l'aide de l'un des différents protocoles réseau. La figure suivante illustre une banque de données VMFS sur une baie de stockage externe accessible via le protocole iSCSI.
+
+
+NOTE: ONTAP Select prend en charge toutes les baies de stockage externes décrites dans la documentation de compatibilité VMware Storage/SAN, y compris iSCSI, Fiber Channel et Fiber Channel over Ethernet.
+
+image:ST_03.jpg["Hôte hyperviseur ESXi"]
+
+
+
+=== Stockage de données NFS sur baie de stockage externe
+
+Vous pouvez créer un datastore NFS sur une baie de stockage externe. Le stockage est accessible à l'aide du protocole réseau NFS. La figure suivante illustre un datastore NFS sur un stockage externe, accessible via l'appliance serveur NFS.
+
+image:ST_04.jpg["Hôte hyperviseur ESXi"]

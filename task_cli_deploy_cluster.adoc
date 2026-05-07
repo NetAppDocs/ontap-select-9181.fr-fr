@@ -1,0 +1,484 @@
+---
+sidebar: sidebar 
+permalink: task_cli_deploy_cluster.html 
+keywords: administer, administering, cli, create cluster, deploy cluster 
+summary: 'Vous pouvez utiliser l"interface de ligne de commandes fournie avec l"utilitaire d"administration ONTAP Select Deploy pour créer un cluster ONTAP Select à nœud unique ou à nœuds multiples.' 
+---
+= Déployez un cluster ONTAP Select à l'aide de la ligne de commandes (CLI)
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Vous pouvez utiliser l'interface de ligne de commandes fournie avec l'utilitaire d'administration ONTAP Select Deploy pour créer un cluster ONTAP Select à nœud unique ou à nœuds multiples.
+
+
+
+== Étape 1 : Préparer le déploiement
+
+Avant de créer un cluster ONTAP Select sur un hyperviseur, vous devez comprendre la préparation requise.
+
+.Étapes
+. Préparez-vous à connecter le stockage au nœud ONTAP Select
++
+[role="tabbed-block"]
+====
+.RAID matériel
+--
+Si vous utilisez un contrôleur RAID matériel local, vous devez créer au moins un datastore (ESXi) ou un link:kvm-host-configuration-and-preparation-checklist.html#step-2-create-a-storage-pool["pool de stockage (KVM)"] à chaque nœud pour les données système ainsi que pour la racine et les agrégats de données. Vous devez attacher le pool de stockage lors de la configuration du nœud ONTAP Select.
+
+--
+.RAID logiciel
+--
+Si vous utilisez un RAID logiciel, vous devez créer au moins un datastore (ESXi) ou un link:kvm-host-configuration-and-preparation-checklist.html#step-2-create-a-storage-pool["pool de stockage (KVM)"] pour les données système et vous assurer que les disques SSD sont disponibles pour les agrégats racine et de données. Vous devez attacher le pool de stockage et les disques lors de la configuration du nœud ONTAP Select.
+
+--
+====
+. Versions ONTAP Select disponibles
++
+L'utilitaire d'administration Deploy contient une seule version d'ONTAP Select. Si vous souhaitez déployer des clusters à l'aide d'une version antérieure d'ONTAP Select, vous devez d'abord link:task_cli_deploy_image_add.html["ajoutez l'image ONTAP Select"] à votre instance Deploy.
+
+. Licence ONTAP Select pour un déploiement en production
++
+Avant de déployer un cluster ONTAP Select dans un environnement de production, vous devez acquérir une licence de capacité de stockage et télécharger le fichier de licence associé. Vous pouvez link:concept_lic_production.html["licence le stockage à chaque nœud"] utiliser le modèle _Niveaux de capacité_ ou licencier un pool partagé avec le modèle _Pools de capacité_.
+
+
+
+
+
+== Étape 2 : Télécharger et enregistrer un fichier de licence
+
+Après avoir acquis un fichier de licence avec une capacité de stockage, vous devez télécharger le fichier contenant la licence sur la machine virtuelle Deploy et l'enregistrer.
+
+
+NOTE: Si vous déployez un cluster uniquement à des fins d'évaluation, vous pouvez ignorer cette étape.
+
+.Avant de commencer
+Vous devez disposer du mot de passe du compte utilisateur admin.
+
+.Étapes
+. Dans une invite de commandes sur votre poste de travail local, utilisez l'utilitaire sftp pour télécharger le fichier de licence sur la machine virtuelle Deploy.
++
+Exemple de sortie
+
++
+....
+sftp admin@10.234.81.101 (provide password when prompted)
+put NLF-320000nnn.txt
+exit
+....
+. Connectez-vous à l'interface de ligne de commande (CLI) de l'utilitaire Deploy avec le compte administrateur via SSH.
+. Enregistrez la licence :
++
+[source, cli]
+----
+license add -file-name <file_name>
+----
++
+Saisissez le mot de passe du compte administrateur lorsque vous y êtes invité.
+
+. Afficher les licences dans le système pour confirmer que la licence a été ajoutée correctement :
++
+[source, cli]
+----
+license show
+----
+
+
+
+
+== Étape 3 : Ajouter des hôtes hyperviseurs
+
+Vous devez enregistrer chaque hôte hyperviseur sur lequel un nœud ONTAP Select sera exécuté.
+
+[role="tabbed-block"]
+====
+.KVM
+--
+Vous devez enregistrer un hôte hyperviseur sur lequel le nœud ONTAP Select s'exécutera. Dans ce cadre, l'utilitaire d'administration Deploy s'authentifie auprès de l'hôte KVM.
+
+.À propos de cette tâche
+Si plusieurs hôtes hyperviseurs sont nécessaires, utilisez cette procédure pour ajouter chaque hôte.
+
+.Étapes
+. Sign in à l'interface de ligne de commandes de l'utilitaire Deploy en utilisant SSH avec le compte administrateur.
+. Inscrire l'hôte :
++
+[source, cli]
+----
+host register -name <FQDN|IP> -hypervisor-type KVM -username <KVM_username>
+----
++
+Exemple de sortie
+
++
+[listing]
+----
+host register -name 10.234.81.14 -hypervisor-type KVM -username root
+----
++
+Saisissez le mot de passe du compte hôte lorsque vous y êtes invité.
+
+. Afficher l'état de l'hôte et confirmer son authentification :
++
+[source, cli]
+----
+host show -name <FQDN|IP> -detailed
+----
++
+Exemple de sortie
+
++
+[listing]
+----
+host show -name 10.234.81.14 -detailed
+----
+
+
+--
+.ESXi
+--
+Dans ce cadre, l'utilitaire d'administration Deploy s'authentifie soit auprès du serveur vCenter gérant l'hôte, soit directement auprès de l'hôte ESXi autonome.
+
+.À propos de cette tâche
+Avant d'enregistrer un hôte géré par vCenter, vous devez ajouter un compte serveur d'administration pour le serveur vCenter. Si l'hôte n'est pas géré par vCenter, vous pouvez fournir l'identifiant de l'hôte lors de son enregistrement. Vous devez suivre cette procédure pour chaque hôte.
+
+.Étapes
+. Sign in à l'interface de ligne de commandes de l'utilitaire Deploy en utilisant SSH avec le compte administrateur.
+. Si l’hôte est géré par un serveur vCenter, ajoutez l’identifiant du compte vCenter :
++
+[source, cli]
+----
+credential add -hostname <FQDN|IP> -type vcenter -username <vcenter_username>
+----
++
+Exemple de sortie
+
++
+....
+credential add -hostname vc.select.company-demo.com -type vcenter -username administrator@vsphere.local
+....
+. Inscrire l'hôte :
++
+** Enregistrez un hôte autonome non géré par vCenter :
++
+[source, cli]
+----
+host register -name <FQDN|IP> -hypervisor-type ESX -username <esx_username>
+----
+** Enregistrez un hôte géré par vCenter :
++
+[source, cli]
+----
+host register -name <FQDN|IP> -hypervisor-type ESX -mgmt-server <FQDN|IP>
+----
++
+Exemple de sortie
+
++
+....
+host register -name 10.234.81.14 -hypervisor-type ESX -mgmt-server vc.select.company-demo.com
+....
+
+
+. Afficher l'état de l'hôte et confirmer son authentification.
++
+[source, cli]
+----
+host show -name <FQDN|IP> -detailed
+----
++
+Exemple de sortie
+
++
+....
+host show -name 10.234.81.14 -detailed
+....
+
+
+--
+====
+
+
+== Étape 4 : Créer et configurer un cluster ONTAP Select
+
+Vous devez créer puis configurer le cluster ONTAP Select. Une fois le cluster configuré, vous pouvez configurer les nœuds individuellement.
+
+.Avant de commencer
+Déterminez le nombre de nœuds que contient le cluster et disposez des informations de configuration associées.
+
+.À propos de cette tâche
+Lorsque vous créez un cluster ONTAP Select, l'utilitaire Deploy génère automatiquement les noms des nœuds en fonction du nom du cluster et du nombre de nœuds que vous fournissez. Deploy génère également les identifiants uniques des nœuds.
+
+.Étapes
+. Sign in à l'interface de ligne de commandes de l'utilitaire Deploy en utilisant SSH avec le compte administrateur.
+. Créer le cluster :
++
+[source, cli]
+----
+cluster create -name <cluster_name> -node-count <count>
+----
++
+Exemple de sortie
+
++
+....
+cluster create -name test-cluster -node-count 1
+....
+. Configurer le cluster :
++
+[source, cli]
+----
+cluster modify -name <cluster_name> -mgmt-ip <IP_address> -netmask <netmask> -gateway <IP_address> -dns-servers <FQDN|IP>_LIST -dns-domains <domain_list>
+----
++
+Exemple de sortie
+
++
+....
+cluster modify -name test-cluster -mgmt-ip 10.234.81.20 -netmask 255.255.255.192
+-gateway 10.234.81.1 -dns-servers 10.221.220.10 -dnsdomains select.company-demo.com
+....
+. Afficher la configuration et l'état du cluster :
++
+[source, cli]
+----
+cluster show -name <cluster_name> -detailed
+----
+
+
+
+
+== Étape 5 : Configurer un nœud ONTAP Select
+
+Vous devez configurer chacun des nœuds du cluster ONTAP Select.
+
+.Avant de commencer
+* Vérifiez que vous disposez des informations de configuration du nœud.
+* Vérifiez que le fichier de licence du Capacity Tier ou du Capacity Pool est téléchargé et installé dans l'utilitaire Deploy.
+
+
+.À propos de cette tâche
+Vous devez utiliser cette procédure pour configurer chaque nœud. Une licence Capacity Tier est appliquée au nœud dans cet exemple.
+
+.Étapes
+. Sign in à l'interface de ligne de commandes de l'utilitaire Deploy en utilisant SSH avec le compte administrateur.
+. Déterminez les noms attribués aux nœuds du cluster :
++
+[source, cli]
+----
+node show -cluster-name <cluster_name>
+----
+. Sélectionnez le nœud et effectuez la configuration de base :
++
+[source, cli]
+----
+node modify -name <node_name> -cluster-name <cluster_name> -host-name <FQDN|IP> -license-serial-number <number> -instance-type TYPE -passthrough-disks false
+----
++
+Exemple de sortie
+
++
+....
+node modify -name test-cluster-01 -cluster-name test-cluster -host-name 10.234.81.14
+-license-serial-number 320000nnnn -instance-type small -passthrough-disks false
+....
++
+La configuration RAID du nœud est indiquée par le paramètre _passthrough-disks_. Si vous utilisez un contrôleur RAID matériel local, cette valeur doit être "false". Si vous utilisez un RAID logiciel, cette valeur doit être "true".
+
++
+Une licence Capacity Tier est utilisée pour le nœud ONTAP Select.
+
+. Afficher la configuration réseau disponible sur l'hôte :
++
+[source, cli]
+----
+host network show -host-name <FQDN|IP> -detailed
+----
++
+Exemple de sortie
+
++
+....
+host network show -host-name 10.234.81.14 -detailed
+....
+. Effectuez la configuration réseau du nœud :
++
+[role="tabbed-block"]
+====
+.Hôte ESXi
+--
+[source, cli]
+----
+node modify -name <node_name> -cluster-name <cluster_name> -mgmt-ip IP -management-networks <network_name> -data-networks <network_name> -internal-network <network_name>
+----
+--
+.Hôte KVM
+--
+[source, cli]
+----
+node modify -name <node_name> -cluster-name <cluster_name> -mgmt-ip IP -management-vlans <vlan_id> -data-vlans <vlan_id> -internal-vlans <vlad_id>
+----
+--
+====
++
+Lors du déploiement d'un cluster à nœud unique, vous n'avez pas besoin de réseau interne et devez supprimer « -internal-network ».
+
++
+Exemple de sortie
+
++
+....
+node modify -name test-cluster-01 -cluster-name test-cluster -mgmt-ip 10.234.81.21
+-management-networks sDOT_Network -data-networks sDOT_Network
+....
+. Afficher la configuration du nœud :
++
+[source, cli]
+----
+node show -name <node_name> -cluster-name <cluster_name> -detailed
+----
++
+Exemple de sortie
+
++
+....
+node show -name test-cluster-01 -cluster-name test-cluster -detailed
+....
+
+
+
+
+== Étape 6 : Connecter le stockage aux nœuds ONTAP Select
+
+Configurez le stockage utilisé par chaque nœud dans le cluster ONTAP Select. Chaque nœud doit toujours se voir attribuer au moins un pool de stockage. Lors de l'utilisation du RAID logiciel, chaque nœud doit également se voir attribuer au moins un disque.
+
+.Avant de commencer
+Créez le pool de stockage à l'aide de VMware vSphere. Si vous utilisez un RAID logiciel, vous avez également besoin d'au moins un disque.
+
+.À propos de cette tâche
+Lors de l'utilisation d'un contrôleur RAID matériel local, vous devez effectuer les étapes 1 à 4. Lors de l'utilisation d'un RAID logiciel, vous devez effectuer les étapes 1 à 6.
+
+.Étapes
+. Sign in à l'interface de ligne de commande de l'utilitaire Deploy via SSH avec les identifiants du compte administrateur.
+. Afficher les pools de stockage disponibles sur l'hôte :
++
+[source, cli]
+----
+host storage pool show -host-name <FQDN|IP>
+----
++
+Exemple de sortie
+
++
+[listing]
+----
+host storage pool show -host-name 10.234.81.14
+----
++
+Vous pouvez également obtenir les pools de stockage disponibles via VMware vSphere.
+
+. Attachez un pool de stockage disponible au nœud ONTAP Select :
++
+[source, cli]
+----
+node storage pool attach -name <pool_name> -cluster-name <cluster_name> -node-name <node_name> -capacity-limit <limit>
+----
++
+Si vous incluez le paramètre « -capacity-limit », spécifiez la valeur en GB ou TB.
+
++
+Exemple de sortie
+
++
+[listing]
+----
+node storage pool attach -name sDOT-02 -cluster-name test-cluster -
+node-name test-cluster-01 -capacity-limit 500GB
+----
+. Afficher les pools de stockage associés au nœud :
++
+[source, cli]
+----
+node storage pool show -cluster-name <cluster_name> -node-name <node_name>
+----
++
+Exemple de sortie
+
++
+[listing]
+----
+node storage pool show -cluster-name test-cluster -node-name testcluster-01
+----
+. Si vous utilisez un RAID logiciel, connectez le ou les disques disponibles :
++
+[source, cli]
+----
+node storage disk attach -node-name <node_name> -cluster-name <cluster_name> -disks <list_of_drives>
+----
++
+Exemple de sortie
+
++
+[listing]
+----
+node storage disk attach -node-name NVME_SN-01 -cluster-name NVME_SN -disks 0000:66:00.0 0000:67:00.0 0000:68:00.0
+----
+. Si vous utilisez un RAID logiciel, affichez les disques connectés au nœud :
++
+[source, cli]
+----
+node storage disk show -node-name <node_name> -cluster-name <cluster_name>`
+----
++
+Exemple de sortie
+
++
+[listing]
+----
+node storage disk show -node-name sdot-smicro-009a -cluster-name NVME
+----
+
+
+
+
+== Étape 7 : Déployer un cluster ONTAP Select
+
+Une fois le cluster et les nœuds configurés, vous pouvez déployer le cluster.
+
+.Avant de commencer
+Exécutez le vérificateur de connectivité réseau en utilisant link:task_adm_connectivity.html["interface utilisateur Web"] ou link:task_cli_connectivity.html["CLI"] pour confirmer la connectivité entre les nœuds du cluster sur le réseau interne.
+
+.Étapes
+. Sign in à l'interface de ligne de commandes de l'utilitaire Deploy en utilisant SSH avec le compte administrateur.
+. Déployez le cluster ONTAP Select :
++
+[source, cli]
+----
+cluster deploy -name <cluster_name>
+----
++
+Exemple de sortie
+
++
+[listing]
+----
+cluster deploy -name test-cluster
+----
++
+Indiquez le mot de passe à utiliser pour le compte administrateur ONTAP lorsque vous y êtes invité.
+
+. Afficher l'état du cluster pour déterminer quand son déploiement a été effectué avec succès :
++
+[source, cli]
+----
+cluster show -name <cluster_name>
+----
+
+
+.Et ensuite ?
+link:task_cli_clusters.html["Sauvegardez les données de configuration de ONTAP Select Deploy"].

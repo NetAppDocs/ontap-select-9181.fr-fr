@@ -1,0 +1,97 @@
+---
+sidebar: sidebar 
+permalink: concept_stor_vsan_external.html 
+keywords: ontap select, vsan and external array configurations, vnas architecture 
+summary: 'Les déploiements de NAS virtuel (vNAS) prennent en charge les clusters ONTAP Select sur vSAN, certains produits HCI, la technologie NetApp HCI et les types de datastores sur baies externes. L"infrastructure sous-jacente de ces configurations assure la résilience du datastore.' 
+---
+= ONTAP Select vSAN et configurations de baies externes
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Les déploiements de NAS virtuel (vNAS) prennent en charge les clusters ONTAP Select sur SAN virtuel (vSAN), certains produits HCI et les types de baies de stockage externes comme datastores. L'infrastructure sous-jacente de ces configurations assure la résilience des datastores.
+
+La configuration minimale requise est que l'hyperviseur utilisé (VMware ESXi ou KVM sur un hôte Linux compatible) prenne en charge la configuration sous-jacente. Si l'hyperviseur est ESXi, il doit figurer dans les listes de compatibilité matérielle (HCL) VMware correspondantes.
+
+
+
+== architecture vNAS
+
+La nomenclature vNAS est utilisée pour toutes les configurations qui n'utilisent pas de DAS. Pour les clusters ONTAP Select multi-nœuds, cela inclut les architectures pour lesquelles les deux nœuds ONTAP Select d'une même paire haute disponibilité partagent un seul datastore (y compris les datastores vSAN). Les nœuds peuvent également être installés sur des datastores distincts issus de la même baie externe partagée. Cela permet d'obtenir des efficacités de stockage côté baie afin de réduire l'encombrement global de l'ensemble de la paire haute disponibilité ONTAP Select. L'architecture des solutions ONTAP Select vNAS est très similaire à celle d'ONTAP Select sur DAS avec un contrôleur RAID local. C'est-à-dire que chaque nœud ONTAP Select continue d'avoir une copie des données de son partenaire de haute disponibilité. Les politiques d'efficacité du stockage ONTAP sont appliquées au niveau du nœud. Par conséquent, les efficacités de stockage côté baie sont préférables car elles peuvent potentiellement être appliquées aux ensembles de données des deux nœuds ONTAP Select.
+
+Il est également possible que chaque nœud ONTAP Select d'une paire haute disponibilité utilise une baie externe distincte. Ce choix est courant lors de l'utilisation d'ONTAP Select MetroCluster SDS avec un stockage externe.
+
+Lorsqu'on utilise des baies externes distinctes pour chaque nœud ONTAP Select, il est très important que les deux baies offrent des caractéristiques de performance similaires à celles de la machine virtuelle ONTAP Select.
+
+
+
+=== Architectures vNAS versus DAS local avec contrôleurs RAID matériels
+
+L'architecture vNAS est logiquement très similaire à celle d'un serveur avec DAS et un contrôleur RAID. Dans les deux cas, ONTAP Select consomme de l'espace du datastore. Cet espace du datastore est découpé en VMDK, et ces VMDK forment les agrégats de données ONTAP traditionnels. ONTAP Deploy s'assure que les VMDK sont correctement dimensionnés et affectés au plex approprié (dans le cas de paires haute disponibilité) lors des opérations de création de cluster et d'ajout de stockage.
+
+Il existe deux différences majeures entre un vNAS et un DAS avec contrôleur RAID. La différence la plus immédiate est que le vNAS ne nécessite pas de contrôleur RAID. Le vNAS part du principe que la baie externe sous-jacente assure la persistance des données et la résilience que fournirait un DAS avec un contrôleur RAID. La seconde, plus subtile, concerne les performances de la NVRAM.
+
+
+
+== NVRAM vNAS
+
+La NVRAM ONTAP Select est une VMDK. Cela signifie que ONTAP Select émule un espace adressable par octet (NVRAM traditionnelle) sur un périphérique adressable par bloc (VMDK). Cependant, les performances de la NVRAM sont absolument essentielles aux performances globales du nœud ONTAP Select.
+
+Pour les configurations DAS avec un contrôleur RAID matériel, le cache du contrôleur RAID matériel fait office de cache NVRAM, car toutes les écritures dans le NVRAM VMDK sont d'abord hébergées dans le cache du contrôleur RAID.
+
+Pour les architectures VNAS, ONTAP Deploy configure automatiquement les nœuds ONTAP Select avec un argument de démarrage appelé Single Instance Data Logging (SIDL). Lorsque cet argument de démarrage est présent, ONTAP Select contourne la NVRAM et écrit directement la charge utile des données dans l’agrégat de données. La NVRAM est uniquement utilisée pour enregistrer l’adresse des blocs modifiés par l’opération WRITE. L’avantage de cette fonctionnalité est d’éviter une double écriture : une écriture dans la NVRAM et une seconde écriture lorsque la NVRAM est déstockée. Cette fonctionnalité est activée uniquement pour les VNAS car les écritures locales dans le cache du contrôleur RAID n’entraînent qu’une latence supplémentaire négligeable.
+
+La fonctionnalité SIDL n'est pas compatible avec toutes les fonctionnalités d'efficacité du stockage ONTAP Select. La fonctionnalité SIDL peut être désactivée au niveau de l'agrégat à l'aide de la commande suivante :
+
+[listing]
+----
+storage aggregate modify -aggregate aggr-name -single-instance-data-logging off
+----
+
+NOTE: Les performances d'écriture sont affectées si la fonction SIDL est désactivée. Il est possible de réactiver la fonction SIDL après que toutes les stratégies d'efficacité du stockage sur tous les volumes de cet agrégat ont été désactivées :
+
+[listing]
+----
+volume efficiency stop -all true -vserver * -volume * (all volumes in the affected aggregate)
+----
+
+
+== Colocaliser les nœuds ONTAP Select lors de l'utilisation de vNAS sur ESXi
+
+ONTAP Select inclut la prise en charge des clusters ONTAP Select multi-nœuds sur stockage partagé. ONTAP Deploy permet la configuration de plusieurs nœuds ONTAP Select sur le même hôte ESXi, à condition que ces nœuds ne fassent pas partie du même cluster.
+
+
+NOTE: Cette configuration est uniquement valable pour les environnements VNAS (banques de données partagées). Plusieurs instances ONTAP Select par hôte ne sont pas prises en charge lors de l'utilisation d'un stockage DAS, car ces instances se disputent le même contrôleur RAID matériel.
+
+ONTAP Deploy garantit que le déploiement initial du cluster VNAS multi-nœuds n’entraîne pas le placement de plusieurs instances ONTAP Select issues du même cluster sur le même hôte. La figure suivante illustre un exemple de déploiement correct de deux clusters à quatre nœuds qui se recoupent sur deux hôtes.
+
+*Déploiement initial de clusters VNAS multi-nœuds*
+
+image:ST_14.jpg["Déploiement initial de clusters VNAS multi-nœuds"]
+
+Après le déploiement, les nœuds ONTAP Select peuvent être migrés entre hôtes. Cela peut entraîner des configurations non optimales et non prises en charge, où deux nœuds ONTAP Select ou plus d'un même cluster partagent le même hôte sous-jacent. NetApp recommande la création manuelle de règles d’anti-affinité pour les machines virtuelles afin que VMware maintienne automatiquement la séparation physique entre les nœuds d’un même cluster, et pas seulement entre les nœuds d’une même paire haute disponibilité.
+
+
+NOTE: Les règles anti-affinité exigent que DRS soit activé sur le cluster ESXi.
+
+Consultez l'exemple suivant pour savoir comment créer une règle d'anti-affinité pour les machines virtuelles ONTAP Select. Si le cluster ONTAP Select contient plus d'une paire haute disponibilité, tous les nœuds du cluster doivent être inclus dans cette règle.
+
+image:ST_15.jpg["Règles VM/Hôte"]
+
+image:ST_16.jpg["Modifier la règle VM/hôte"]
+
+Deux ou plusieurs nœuds ONTAP Select du même cluster ONTAP Select peuvent potentiellement se trouver sur le même hôte ESXi pour l'une des raisons suivantes :
+
+* DRS n'est pas présent en raison des limitations de la licence VMware vSphere ou si DRS n'est pas activé.
+* La règle anti-affinité DRS est contournée car une opération VMware HA ou une migration de VM initiée par l'administrateur est prioritaire.
+
+
+
+NOTE: ONTAP Deploy ne surveille pas de manière proactive les emplacements des machines virtuelles ONTAP Select. Cependant, une opération d'actualisation du cluster reflète cette configuration non prise en charge dans les journaux ONTAP Deploy :
+
+image:ST_17.PNG["Journaux de déploiement ONTAP"]

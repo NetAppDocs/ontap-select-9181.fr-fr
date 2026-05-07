@@ -1,0 +1,47 @@
+---
+indexpage:
+  title: Documentation ONTAP Select
+  lead: NetApp ONTAP Select est une appliance de stockage définie par logiciel que
+    vous pouvez déployer sur une variété de serveurs de matériel ordinaire exécutant
+    l'hyperviseur VMware ESXi ou Kernel-based Virtual Machine (KVM). Elle offre l'agilité
+    nécessaire pour construire une infrastructure cloud flexible et évolutive. Ce
+    site contient la documentation pour ONTAP Select 9.18.1.
+  tiles:
+  - title: Commencer
+    links:
+    - title: Notes de version
+      url: https://library.netapp.com/ecm/ecm_download_file/ECMLP3365264
+    - title: Quoi de neuf
+      url: "/reference_new_ots.html"
+    - title: Découvrez ONTAP Select
+      url: "/concept_ots_overview.html"
+    - title: Licence
+      url: "/concept_lic_evaluation.html"
+    - title: Essayez ONTAP Select
+      url: "/access-evaluation-software.html"
+    - title: FAQ
+      url: "/reference_faq.html"
+  - title: Installer et gérer
+    links:
+    - title: Planifiez votre déploiement
+      url: "/concept_workflow_deploy.html"
+    - title: Installation
+      url: "/task_install_deploy.html"
+    - title: Gérez vos clusters
+      url: "/concept_adm_before.html"
+    - title: Utilisez l'API REST
+      url: "/concept_api_how_access.html"
+    - title: Déployez une instance d'évaluation de 90 jours d'un cluster
+      url: "/deploy-evaluation-ontap-select-ovf-template.html"
+  - title: Ressources supplémentaires
+    links:
+    - title: Bibliothèque de produits ONTAP Select
+      url: https://mysupport.netapp.com/documentation/productlibrary/index.html?productID=62293
+    - title: Documentation ONTAP 9
+      url: https://docs.netapp.com/us-en/ontap/
+    - title: Blogs ONTAP Select
+      url: https://blog.netapp.com/tag/ontap-select/
+    - title: Communauté ONTAP Select
+      url: https://community.netapp.com/t5/forums/filteredbylabelpage/board-id/data-ontap-discussions/label-name/ontap%20select
+    - title: Matrice d'interopérabilité
+      url: https://mysupport.netapp.com/matrix/

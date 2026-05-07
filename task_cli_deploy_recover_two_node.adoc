@@ -1,0 +1,233 @@
+---
+sidebar: sidebar 
+permalink: task_cli_deploy_recover_two_node.html 
+keywords: administer, administering, cli, two node cluster, recover, recovering 
+summary: 'Si l"utilitaire ONTAP Select Deploy tombe en panne ou devient indisponible pour une raison quelconque, vous perdez la capacité d"administrer les nœuds et clusters ONTAP Select. De plus, tous les clusters à deux nœuds perdent la capacité de haute disponibilité, car le service de médiation inclus avec Deploy est indisponible. En cas de panne irrécupérable, vous devez restaurer l"instance de l"utilitaire Deploy pour rétablir la fonctionnalité administrative et de haute disponibilité.' 
+---
+= Récupérer l'utilitaire ONTAP Select Deploy pour un cluster à deux nœuds
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Si l'utilitaire ONTAP Select Deploy tombe en panne ou devient indisponible pour une raison quelconque, vous perdez la capacité d'administrer les nœuds et clusters ONTAP Select. De plus, tous les clusters à deux nœuds perdent la capacité de haute disponibilité, car le service de médiation inclus avec Deploy est indisponible. En cas de panne irrécupérable, vous devez restaurer l'instance de l'utilitaire Deploy pour rétablir la fonctionnalité administrative et de haute disponibilité.
+
+
+
+== Préparez-vous à récupérer l'utilitaire Deploy
+
+Avant de tenter de récupérer une instance de l'utilitaire Deploy, une préparation est nécessaire pour garantir le succès. Vous devez maîtriser plusieurs procédures d'administration et disposer des informations requises.
+
+.Étapes
+. Vérifiez que vous pouvez installer une nouvelle instance de l'utilitaire ONTAP Select Deploy dans votre environnement d'hyperviseur.
++
+link:task_install_deploy.html["Découvrez comment installer l'utilitaire ONTAP Select Deploy"]
+
+. Vérifiez que vous pouvez vous connecter au cluster ONTAP Select et accéder au shell du cluster ONTAP (CLI).
+. Déterminez si vous disposez d'une sauvegarde des données de configuration de l'instance défaillante de l'utilitaire Deploy qui contient le cluster ONTAP Select à deux nœuds. Il est possible que votre sauvegarde ne contienne pas le cluster.
+. Vérifiez que vous pouvez restaurer une sauvegarde des données de configuration de Deploy, en fonction de la procédure de récupération utilisée.
++
+link:task_cli_migrate_deploy.html#step-3-restore-the-deploy-configuration-data-to-the-new-virtual-machine["Découvrez comment restaurer les données de configuration de Deploy sur la nouvelle machine virtuelle"]
+
+. Vous disposez de l'adresse IP de la machine virtuelle de l'utilitaire Deploy d'origine qui a échoué.
+. Déterminez si l’utilisation de licences Capacity Pools ou Capacity Tiers est en place. Si vous utilisez des licences Capacity Pools, vous devez réinstaller chaque licence Capacity Pool après la récupération ou la restauration de l’instance Deploy.
+. Déterminez la procédure à utiliser pour récupérer une instance de l'utilitaire ONTAP Select Deploy. Votre décision dépend de la présence ou non d'une sauvegarde des données de configuration de l'utilitaire Deploy défaillant d'origine qui contient le cluster ONTAP Select à deux nœuds.
++
+[cols="35,65"]
+|===
+| Disposez-vous d'une sauvegarde Deploy contenant le cluster à deux nœuds ? | Utilisez la procédure de récupération... 
+
+
+| Oui | <<restore-deploy-backup,Restaurez une instance de l'utilitaire Deploy à l'aide d'une sauvegarde de configuration>> 
+
+
+| Non | <<restore-and-recover-deploy,Reconfigurer et récupérer une instance de l'utilitaire Deploy>> 
+|===
+
+
+
+
+== Restaurez une instance de l'utilitaire Deploy à l'aide d'une sauvegarde de configuration
+
+Si vous disposez d'une sauvegarde de l'instance défaillante de l'utilitaire Deploy contenant le cluster à deux nœuds, vous pouvez restaurer les données de configuration sur la nouvelle instance de machine virtuelle Deploy. Vous devrez ensuite finaliser la récupération en effectuant une configuration supplémentaire des deux nœuds dans le cluster ONTAP Select.
+
+.Avant de commencer
+Sauvegardez les données de configuration de la machine virtuelle Deploy d'origine ayant échoué, qui héberge le cluster à deux nœuds. Vous devez pouvoir vous connecter à la ligne de commandes ONTAP du cluster à deux nœuds et connaître les noms ONTAP des deux nœuds.
+
+.À propos de cette tâche
+Étant donné que la sauvegarde de configuration que vous restaurez contient le cluster à deux nœuds, les cibles iSCSI du médiateur et les boîtes aux lettres sont recréées dans la nouvelle machine virtuelle Deploy utility.
+
+.Étapes
+. Préparez une nouvelle instance de l'utilitaire ONTAP Select Deploy :
++
+.. Installez une nouvelle machine virtuelle Deploy utility.
+.. Restaurez la configuration Deploy à partir d'une sauvegarde précédente sur la nouvelle machine virtuelle.
++
+Consultez les tâches associées pour obtenir des informations plus détaillées sur les procédures d'installation et de restauration.
+
+
+
+. Sign in à l’interface de ligne de commandes ONTAP du cluster ONTAP Select à deux nœuds.
+. Accéder au mode de privilèges avancés :
++
+[source, cli]
+----
+set adv
+----
+. Si l'adresse IP de la nouvelle machine virtuelle Deploy est différente de celle de la machine virtuelle Deploy d'origine, supprimez les anciennes cibles iSCSI du médiateur et ajoutez de nouvelles cibles :
++
+[source, cli]
+----
+storage iscsi-initiator remove-target -node * -target-type mailbox
+----
++
+[source, cli]
+----
+storage iscsi-initiator add-target -node <node1_name> -label mediator -target-type mailbox -target-portal <ip_address> -target-name <target>
+----
++
+[source, cli]
+----
+storage iscsi-initiator add-target -node <node2_name> -label mediator -target-type mailbox -target-portal <ip_address> -target-name <target>
+----
++
+Le  `<ip_address>` paramètre correspond à l'adresse IP de la nouvelle machine virtuelle Deploy.
+
++
+Ces commandes permettent aux nœuds ONTAP Select de découvrir les disques de boîtes aux lettres sur la nouvelle machine virtuelle de l'utilitaire Deploy.
+
+. Déterminez les noms des disques médiateurs :
++
+[source, cli]
+----
+disk show -container-type mediator
+----
+. Attribuez les disques de boîtes aux lettres aux deux nœuds :
++
+[source, cli]
+----
+disk assign -disk <mediator-disk1-name> -owner <node1-name>
+
+disk assign -disk <mediator-disk2-name> -owner <node2-name>
+----
+. Vérifiez que le basculement du stockage est activé :
++
+[source, cli]
+----
+storage failover show
+----
+
+
+.Après avoir terminé
+Si vous utilisez un système de licences Capacity Pools, réinstallez chaque licence Capacity Pool. Voir link:task_adm_licenses.html#reinstall-a-capacity-pool-license["Réinstaller une licence de pool de capacité"] pour plus de détails.
+
+
+
+== Reconfigurer et récupérer une instance de l'utilitaire Deploy
+
+Si vous ne disposez pas d'une sauvegarde de l'instance défaillante de l'utilitaire Deploy contenant le cluster à deux nœuds, configurez la cible iSCSI du médiateur et la boîte aux lettres dans la nouvelle machine virtuelle Deploy. Vous pourrez ensuite finaliser la récupération en effectuant la configuration supplémentaire des deux nœuds dans le cluster ONTAP Select.
+
+.Avant de commencer
+Vérifiez que vous disposez du nom de la cible du médiateur pour la nouvelle instance de l'utilitaire Deploy. Vous devez pouvoir vous connecter à la ligne de commandes ONTAP du cluster à deux nœuds et connaître les noms ONTAP des deux nœuds.
+
+.À propos de cette tâche
+Vous pouvez, si vous le souhaitez, restaurer une sauvegarde de configuration sur la nouvelle machine virtuelle Deploy, même si celle-ci ne contient pas le cluster à deux nœuds. Comme le cluster à deux nœuds n'est pas recréé lors de la restauration, vous devez ajouter manuellement la cible iSCSI du médiateur et la boîte aux lettres à la nouvelle instance de l'utilitaire Deploy via la page web de la documentation en ligne ONTAP Select sur Deploy. Vous devez pouvoir vous connecter au cluster à deux nœuds et connaître les noms ONTAP des deux nœuds.
+
+
+NOTE: L'objectif de la procédure de récupération est de rétablir le cluster à deux nœuds dans un état sain, permettant ainsi d'effectuer des opérations normales de prise de contrôle et de restitution HA.
+
+.Étapes
+. Préparez une nouvelle instance de l'utilitaire ONTAP Select Deploy :
++
+.. Installez une nouvelle machine virtuelle Deploy utility.
+.. Vous pouvez également restaurer la configuration Deploy à partir d'une sauvegarde précédente sur la nouvelle machine virtuelle.
++
+Si vous restaurez une sauvegarde précédente, la nouvelle instance Deploy ne contiendra pas le cluster à deux nœuds. Consultez la section d'informations connexes pour plus d'informations détaillées sur les procédures d'installation et de restauration.
+
+
+
+. Sign in à l’interface de ligne de commandes ONTAP du cluster ONTAP Select à deux nœuds.
+. Accéder au mode privilégié avancé :
++
+[source, cli]
+----
+set adv
+----
+. Obtenez le nom de la cible iSCSI du médiateur :
++
+[source, cli]
+----
+storage iscsi-initiator show -target-type mailbox
+----
+. Accédez à la page Web de documentation en ligne de la nouvelle machine virtuelle Deploy utility et connectez-vous à l'aide du compte admin :
++
+`\http://<ip_address>/api/ui`
+
++
+Vous devez utiliser l'adresse IP de votre machine virtuelle Deploy.
+
+. Sélectionnez *Mediator* puis *GET /mediators*.
+. Sélectionnez *Essayez-le !* pour afficher une liste des médiateurs gérés par Deploy.
++
+Notez l'ID de l'instance de médiateur souhaitée.
+
+. Sélectionnez *Mediator* puis *POST*.
+. Indiquez la valeur de mediator_id.
+. Sélectionnez le *Modèle* à côté de  `iscsi_target` et complétez la valeur du nom.
++
+Utilisez le nom de la cible pour le paramètre iqn_name.
+
+. Sélectionnez *Essayez-le !* pour créer la cible iSCSI du médiateur.
++
+Si la requête aboutit, vous recevrez le code d'état HTTP 200.
+
+. Si l'adresse IP de la nouvelle machine virtuelle Deploy est différente de celle de la machine virtuelle Deploy d'origine, vous devez utiliser la ligne de commandes ONTAP pour supprimer les anciennes cibles iSCSI du médiateur et ajouter de nouvelles cibles :
++
+[source, cli]
+----
+storage iscsi-initiator remove-target -node * -target-type mailbox
+----
++
+[source, cli]
+----
+storage iscsi-initiator add-target -node <node1_name> -label mediator -target-type mailbox -target-portal <ip_address> -target-name <target>
+----
++
+[source, cli]
+----
+storage iscsi-initiator add-target -node <node2_name> -label mediator-target-type mailbox -target-portal <ip_address> -target-name <target>
+----
++
+Le  `<ip_address>` paramètre correspond à l'adresse IP de la nouvelle machine virtuelle Deploy.
+
++
+Ces commandes permettent aux nœuds ONTAP Select de découvrir les disques de boîtes aux lettres sur la nouvelle machine virtuelle de l'utilitaire Deploy.
+
+. Déterminez les noms des disques médiateurs :
++
+[source, cli]
+----
+disk show -container-type mediator
+----
+. Attribuez les disques de boîtes aux lettres aux deux nœuds :
++
+[source, cli]
+----
+disk assign -disk <mediator-disk1-name> -owner <node1-name>
+
+disk assign -disk <mediator-disk2-name> -owner <node2-name>
+----
+. Vérifiez que le basculement du stockage est activé :
++
+[source, cli]
+----
+storage failover show
+----
+
+
+.Après avoir terminé
+Si vous utilisez un système de licences Capacity Pools, réinstallez chaque licence Capacity Pool. Voir link:task_adm_licenses.html#reinstall-a-capacity-pool-license["Réinstaller une licence de pool de capacité"] pour plus de détails.

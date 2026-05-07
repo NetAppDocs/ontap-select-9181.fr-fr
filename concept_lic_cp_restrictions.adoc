@@ -1,0 +1,38 @@
+---
+sidebar: sidebar 
+permalink: concept_lic_cp_restrictions.html 
+keywords: license, licensing, Capacity Pools, restrictions 
+summary: 'Les restrictions applicables lors de l"utilisation du modèle de licence Capacity Pool sont présentées ci-dessous.' 
+---
+= Restrictions de déploiement pour les licences ONTAP Select Capacity Pools
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Les restrictions applicables lors de l'utilisation du modèle de licence Capacity Pool sont présentées ci-dessous.
+
+.Modèle de licence cohérent par cluster
+Tous les nœuds d'un même cluster ONTAP Select doivent utiliser le même modèle de licence, soit Capacity Tiers, soit Capacity Pools. Vous ne pouvez pas mélanger les types de licences pour les nœuds d'un même cluster.
+
+.Tous les nœuds d'un cluster utilisent la même instance de License Manager
+Tous les nœuds disposant d'une licence Capacity Pool dans un cluster ONTAP Select doivent utiliser la même instance de License Manager. Étant donné qu'il existe une instance de License Manager au sein de chaque instance Deploy, cette restriction est une reformulation de l'exigence existante selon laquelle la même instance Deploy doit gérer tous les nœuds d'un cluster.
+
+.Un pool de capacité par nœud
+Chaque nœud peut louer de l'espace de stockage auprès d'un seul pool de capacité. Un nœud ne peut pas utiliser deux pools ou plus.
+
+.Même pool pour les nœuds d'une paire haute disponibilité
+Les deux nœuds d'une même paire haute disponibilité doivent louer du stockage auprès du même pool de capacité. Cependant, différentes paires haute disponibilité au sein d'un même cluster peuvent louer du stockage auprès de pools différents gérés par le même License Manager.
+
+.Durée de la licence de stockage
+Vous devez choisir une durée de licence lors de l'acquisition de la licence de stockage auprès de NetApp. Par exemple, une licence peut être valable un an.
+
+.Durée de bail de l’agrégat de données
+Lorsqu'un nœud ONTAP Select demande un bail de stockage pour un agrégat de données, le License Manager attribue un bail pour une durée spécifique, en fonction de la configuration du Capacity Pool. Vous pouvez configurer la durée du bail pour chaque pool entre une heure et sept jours. La durée du bail par défaut est de 24 heures.
+
+.Adresse IP statique attribuée à Deploy
+Vous devez attribuer une adresse IP statique à l'utilitaire d'administration Deploy lorsque la licence Capacity Pools est utilisée.

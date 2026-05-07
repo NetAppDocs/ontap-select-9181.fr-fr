@@ -1,0 +1,42 @@
+---
+sidebar: sidebar 
+permalink: concept_lic_cp_serial_number.html 
+keywords: license, licensing, Capacity Pools, node serial numbers 
+summary: Avec le modèle de licence par niveaux de capacité, le numéro de série à neuf chiffres du nœud est identique au numéro de série de la licence qui lui est attribuée. Cependant, les numéros de série attribués aux nœuds utilisant le modèle de licence par pools de capacité ont un format différent. 
+---
+= Numéros de série des nœuds pour le modèle de licence ONTAP Select Capacity Pools
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Avec le modèle de licence par niveaux de capacité, le numéro de série à neuf chiffres du nœud est identique au numéro de série de la licence qui lui est attribuée. Cependant, les numéros de série attribués aux nœuds utilisant le modèle de licence par pools de capacité ont un format différent.
+
+Le numéro de série d'un nœud utilisant une licence Capacity Pools a le format suivant :
+
+`999 ppppppppp nnnnnnnn`
+
+
+NOTE: Des espaces ont été ajoutés par souci de clarté, mais ne font pas partie du numéro de série.
+
+Le tableau suivant décrit chaque section du numéro de série du nœud de gauche à droite.
+
+[cols="15,85"]
+|===
+| Section | Description 
+
+
+| '999' | Valeur constante à trois chiffres réservée par NetApp. 
+
+
+| ppppppppp | Numéro de série de licence variable à neuf chiffres attribué au pool de capacité par NetApp 
+
+
+| nnnnnnnn | Valeur variable à huit chiffres générée par le License Manager pour chaque nœud utilisant le Capacity Pool 
+|===
+
+CAUTION: Lors de l'ouverture d'un ticket auprès du support NetApp concernant un nœud utilisant une licence Capacity Pool, vous devez fournir le numéro de série à neuf chiffres de la licence Capacity Pool. Vous ne pouvez pas fournir le numéro de série complet du nœud à vingt chiffres. Vous pouvez obtenir le numéro de série de la licence à partir du numéro de série du nœud en ignorant les trois premiers chiffres (« 999 ») et en extrayant les neuf chiffres suivants (ppppppppp).

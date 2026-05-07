@@ -1,0 +1,41 @@
+---
+sidebar: sidebar 
+permalink: reference_plan_ots_two_node.html 
+keywords: plan, planning, two nodes, two node clusters 
+summary: 'Le déploiement d"un cluster à deux nœuds avec une paire haute disponibilité (HA) implique la même planification et la même configuration que pour les autres configurations de nœud de cluster. Cependant, plusieurs différences sont à prendre en compte lors de la création d"un cluster à deux nœuds.' 
+---
+= Clusters ONTAP Select à deux nœuds avec haute disponibilité
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Le déploiement d'un cluster à deux nœuds avec une paire haute disponibilité (HA) implique la même planification et la même configuration que pour les autres configurations de nœud de cluster. Cependant, plusieurs différences sont à prendre en compte lors de la création d'un cluster à deux nœuds.
+
+.Environnement cible
+Le cluster à deux nœuds se compose d'une paire haute disponibilité et a été spécialement conçu pour les déploiements dans des bureaux distants et des succursales.
+
+
+NOTE: Bien que conçu principalement pour l'environnement de bureau distant et de succursale, il est également possible de déployer un cluster à deux nœuds dans le centre de données si nécessaire.
+
+.Licence
+Vous pouvez déployer un cluster à deux nœuds avec n'importe quelle licence vSphere de VMware. Cependant, les licences VMware ROBO Standard et Advanced sont idéales pour les déploiements à distance et dans les succursales.
+
+.Service de médiation
+Lorsqu'un cluster est composé de deux nœuds, il n'est pas possible d'atteindre le quorum requis lorsqu'un nœud tombe en panne ou perd la communication. Pour résoudre ces types de situations de split-brain, chaque instance de l'utilitaire ONTAP Select Deploy inclut un service de médiation. Ce service se connecte à chaque nœud des clusters actifs à deux nœuds pour surveiller les paires haute disponibilité et aider à la gestion des pannes. Le service de médiation conserve les informations d'état de la paire haute disponibilité sur une cible iSCSI dédiée associée à chaque cluster à deux nœuds.
+
+
+CAUTION: Si vous disposez d'un ou plusieurs clusters à deux nœuds actifs, la machine virtuelle ONTAP Select Deploy qui administre les clusters doit être en cours d'exécution en permanence. Si la machine virtuelle ONTAP Select Deploy est arrêtée ou tombe en panne, le service de médiation devient indisponible et la capacité de haute disponibilité est perdue pour les clusters à deux nœuds.
+
+.Localisation du cluster et du service de médiation
+Les clusters à deux nœuds étant généralement déployés dans un bureau distant ou une succursale, ils peuvent être éloignés du centre de données de l'entreprise et de l'utilitaire ONTAP Select Deploy qui assure le support administratif. Avec cette configuration, le trafic de gestion entre l'utilitaire ONTAP Select Deploy et le cluster transite par le WAN. Consultez la link:reference_release_notes.html["notes de version"] pour plus d'informations sur les limitations et restrictions.
+
+.Sauvegardez les données de configuration du déploiement
+Il est bonne pratique de link:task_cli_clusters.html["Sauvegardez les données de configuration ONTAP Select Deploy"] régulièrement, notamment après la création d'un cluster. Cela devient particulièrement important avec les clusters à deux nœuds, en raison des données de configuration du médiateur incluses dans la sauvegarde.
+
+.Adresse IP statique attribuée à Deploy
+Vous devez attribuer une adresse IP statique à l'utilitaire d'administration ONTAP Select Deploy. Cette exigence s'applique à toutes les instances ONTAP Select Deploy qui gèrent un ou plusieurs clusters ONTAP Select à deux nœuds.

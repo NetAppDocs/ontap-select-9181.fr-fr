@@ -1,0 +1,238 @@
+---
+sidebar: sidebar 
+permalink: cli-upgrade-esxi.html 
+keywords: administer, administering, cli, esxi, upgrade, esxi 8.0 
+summary: Si vous utilisez ONTAP Select sur VMware ESXi, vous pouvez mettre à niveau le logiciel ESXi depuis une version antérieure prise en charge vers ESXi 8.0 ou une version ultérieure. Avant la mise à niveau, vous devez comprendre le processus et sélectionner la procédure de mise à niveau appropriée. 
+---
+= Mettez à niveau vers VMware ESXi 8.0 ou une version ultérieure pour ONTAP Select
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Si vous utilisez ONTAP Select sur VMware ESXi, vous pouvez mettre à niveau le logiciel ESXi depuis une version antérieure prise en charge vers ESXi 8.0 ou une version ultérieure. Avant la mise à niveau, vous devez comprendre le processus et sélectionner la procédure de mise à niveau appropriée.
+
+
+
+== Préparez-vous à mettre à niveau VMware ESXi
+
+Préparez et sélectionnez la procédure de mise à niveau appropriée à votre environnement avant de mettre à niveau le logiciel ESXi sur les hyperviseurs hébergeant un cluster ONTAP Select.
+
+.Étapes
+. *Familiarisez-vous avec la procédure de mise à niveau de VMware ESXi*
++
+La mise à niveau du logiciel ESXi est un processus décrit et pris en charge par VMware. Le processus de mise à niveau de l'hyperviseur fait partie de la procédure de mise à niveau globale lors de l'utilisation de ONTAP Select. Consultez la documentation VMware pour plus d'informations.
+
+. *Sélectionnez une procédure de mise à niveau*
++
+Plusieurs procédures de mise à niveau sont disponibles. Vous devez sélectionner la procédure appropriée en fonction des critères suivants :
+
++
+** Taille du cluster ONTAP Select
++
+Les clusters à nœud unique et à nœuds multiples sont tous deux pris en charge.
+
+** Utilisation de ONTAP Select Deploy
++
+La mise à niveau est possible avec ou sans l'utilitaire Deploy.
+
++
+
+TIP: Vous devez sélectionner une procédure de mise à niveau qui utilise l'utilitaire d'administration Deploy.
+
++
+Effectuer une mise à niveau d'ESXi à l'aide de l'utilitaire d'administration Deploy est l'option la plus générale et la plus résiliente. Toutefois, il peut arriver que Deploy soit indisponible ou ne puisse pas être utilisé. Par exemple, la mise à niveau vers ESXi 8.0 n'est pas prise en charge avec les versions antérieures de ONTAP Select et de l'utilitaire d'administration Deploy.
+
+
+
+
+
+Si vous utilisez ces versions antérieures et que vous tentez une mise à niveau, vous pouvez laisser la machine virtuelle ONTAP Select dans un état où elle ne peut pas démarrer. Dans ce cas, vous devez choisir une procédure de mise à niveau qui n'utilise pas Deploy.
+
+. *Mettez à niveau l'utilitaire d'administration Deploy*
++
+Avant d'effectuer une mise à niveau à l'aide de l'utilitaire Deploy, vous devrez peut-être mettre à niveau votre instance Deploy. En général, il est recommandé d'utiliser la version la plus récente de Deploy. L'utilitaire Deploy doit être compatible avec la version de ONTAP Select que vous utilisez. Consultez la link:reference_release_notes.html["Notes de version d'ONTAP Select"] pour plus d'informations.
+
+. *Une fois la procédure de mise à jour terminée*
++
+Si vous choisissez une procédure de mise à niveau utilisant l'utilitaire Deploy, vous devez effectuer une actualisation du cluster à l'aide de Deploy une fois tous les nœuds mis à niveau. Consultez la section « Actualisation de la configuration du cluster Deploy » pour plus d'informations.
+
+
+
+
+
+== Mettre à niveau un cluster à nœud unique à l'aide de Deploy
+
+Vous pouvez utiliser l'utilitaire d'administration Deploy dans le cadre de la procédure de mise à niveau de l'hyperviseur VMware ESXi hébergeant un cluster ONTAP Select à nœud unique.
+
+.Étapes
+. Sign in à l'interface de ligne de commandes de l'utilitaire Deploy en utilisant SSH avec le compte administrateur.
+. Déplacer le nœud vers l'état hors ligne :
++
+[source, cli]
+----
+node stop --cluster-name <cluster_name> --node-name <node_name>
+----
+. Mettez à niveau l'hyperviseur hôte sur lequel ONTAP Select est exécuté vers ESXi 8.0 ou une version ultérieure en utilisant la procédure fournie par VMware.
+. Déplacer le nœud vers l'état en ligne :
++
+[source, cli]
+----
+node start --cluster-name <cluster_name> --node-name <node_name>
+----
+. Une fois le nœud opérationnel, vérifiez que le cluster est sain.
++
+Exemple :
+
++
+....
+ESX-1N::> cluster show
+Node           Health  Eligibility
+-------------- ------- ------------
+sdot-d200-011d true    true
+....
+
+
+.Après avoir terminé
+Vous devez effectuer une opération d'actualisation du cluster à l'aide de l'utilitaire d'administration Deploy.
+
+
+
+== Mettre à niveau un cluster multi-nœuds à l'aide de Deploy
+
+Vous pouvez utiliser l'utilitaire d'administration Deploy dans le cadre de la procédure de mise à niveau des hyperviseurs VMware ESXi hébergeant un cluster multi-nœuds ONTAP Select.
+
+.À propos de cette tâche
+Vous devez effectuer cette procédure de mise à niveau pour chacun des nœuds du cluster, un nœud à la fois. Si le cluster contient quatre nœuds ou plus, vous devez mettre à niveau les nœuds de chaque paire haute disponibilité séquentiellement avant de passer à la paire haute disponibilité suivante.
+
+.Étapes
+. Sign in à l'interface de ligne de commandes de l'utilitaire Deploy en utilisant SSH avec le compte administrateur.
+. Déplacer le nœud vers l'état hors ligne :
++
+[source, cli]
+----
+node stop --cluster-name <cluster_name> --node-name <node_name>
+----
+. Mettez à niveau l'hyperviseur hôte sur lequel ONTAP Select est exécuté vers ESXi 8.0 ou une version ultérieure en utilisant la procédure fournie par VMware.
++
+Consultez la section Préparation de la mise à niveau de VMware ESXi pour plus d'informations.
+
+. Déplacer le nœud vers l'état en ligne :
++
+[source, cli]
+----
+node start --cluster-name <cluster_name> --node-name <node_name>
+----
+. Une fois le nœud opérationnel, vérifiez que le basculement du stockage est activé et que le cluster est sain.
++
+.Afficher un exemple
+[%collapsible]
+====
+[listing]
+----
+ESX-2N_I2_N11N12::> storage failover show
+Takeover
+Node Partner Possible State Description
+-------------- -------------- -------- ---------------------------
+sdot-d200-011d sdot-d200-012d true Connected to sdot-d200-012d
+sdot-d200-012d sdot-d200-011d true Connected to sdot-d200-011d
+2 entries were displayed.
+ESX-2N_I2_N11N12::> cluster show
+Node Health Eligibility
+--------------------- ------- ------------
+sdot-d200-011d true true
+sdot-d200-012d true true
+2 entries were displayed.
+----
+====
+
+
+.Après avoir terminé
+Vous devez effectuer la procédure de mise à niveau pour chaque hôte utilisé dans le cluster ONTAP Select. Une fois tous les hôtes ESXi mis à niveau, vous devez procéder à une actualisation du cluster à l'aide de l'utilitaire d'administration Deploy.
+
+
+
+== Mettre à niveau un cluster à nœud unique sans Deploy
+
+Vous pouvez mettre à niveau l'hyperviseur VMware ESXi hébergeant un cluster ONTAP Select à nœud unique sans utiliser l'utilitaire d'administration Deploy.
+
+.Étapes
+. Sign in à l’interface de ligne de commandes ONTAP et arrêtez le nœud.
+. À l'aide de VMware vSphere, vérifiez que la machine virtuelle ONTAP Select est hors tension.
+. Mettez à niveau l'hyperviseur hôte sur lequel ONTAP Select est exécuté vers ESXi 8.0 ou une version ultérieure en utilisant la procédure fournie par VMware.
++
+Consultez la section Préparation de la mise à niveau de VMware ESXi pour plus d'informations.
+
+. À l'aide de VMware vSphere, accédez à vCenter et effectuez les opérations suivantes :
++
+.. Ajoutez un lecteur de disquettes à la machine virtuelle ONTAP Select.
+.. Mettez sous tension la machine virtuelle ONTAP Select.
+.. Sign in à l'interface de ligne de commandes ONTAP en utilisant SSH avec le compte administrateur.
+
+
+. Une fois le nœud opérationnel, vérifiez que le cluster est sain.
++
+Exemple :
+
++
+....
+ESX-1N::> cluster show
+Node           Health  Eligibility
+-------------- ------- ------------
+sdot-d200-011d true    true
+....
+
+
+.Après avoir terminé
+Vous devez effectuer une opération d'actualisation du cluster à l'aide de l'utilitaire d'administration Deploy.
+
+
+
+== Mettre à niveau un cluster multi-nœuds sans Deploy
+
+Vous pouvez mettre à niveau les hyperviseurs VMware ESXi hébergeant une grappe multi-nœuds ONTAP Select sans utiliser l'utilitaire d'administration Deploy.
+
+.À propos de cette tâche
+Vous devez effectuer cette procédure de mise à niveau pour chacun des nœuds du cluster, un nœud à la fois. Si le cluster contient quatre nœuds ou plus, vous devez mettre à niveau les nœuds de chaque paire haute disponibilité séquentiellement avant de passer à la paire haute disponibilité suivante.
+
+.Étapes
+. Sign in à l’interface de ligne de commandes ONTAP et arrêtez le nœud.
+. À l'aide de VMware vSphere, vérifiez que la machine virtuelle ONTAP Select est hors tension.
+. Mettez à niveau l'hyperviseur hôte sur lequel ONTAP Select est exécuté vers ESXi 8.0 ou une version ultérieure en utilisant la procédure fournie par VMware.
+. À l'aide de VMware vSphere, accédez à vCenter et effectuez les opérations suivantes :
++
+.. Ajoutez un lecteur de disquettes à la machine virtuelle ONTAP Select.
+.. Mettez sous tension la machine virtuelle ONTAP Select.
+.. Sign in à l'interface de ligne de commandes ONTAP en utilisant SSH avec le compte administrateur.
+
+
+. Une fois le nœud opérationnel, vérifiez que le basculement du stockage est activé et que le cluster est sain.
++
+.Afficher un exemple
+[%collapsible]
+====
+[listing]
+----
+ESX-2N_I2_N11N12::> storage failover show
+Takeover
+Node Partner Possible State Description
+-------------- -------------- -------- ---------------------------
+sdot-d200-011d sdot-d200-012d true Connected to sdot-d200-012d
+sdot-d200-012d sdot-d200-011d true Connected to sdot-d200-011d
+2 entries were displayed.
+ESX-2N_I2_N11N12::> cluster show
+Node Health Eligibility
+--------------------- ------- ------------
+sdot-d200-011d true true
+sdot-d200-012d true true
+2 entries were displayed.
+----
+====
+
+
+.Après avoir terminé
+Vous devez effectuer la procédure de mise à niveau pour chaque hôte utilisé dans le cluster ONTAP Select.

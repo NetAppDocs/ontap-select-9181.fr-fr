@@ -1,0 +1,76 @@
+---
+sidebar: sidebar 
+permalink: concept_api_understanding_scripts.html 
+keywords: rest api, deploy rest api, rest, python, python scripts, understanding 
+summary: 'Les exemples de scripts Python vous permettent d"effectuer différentes tâches. Il est important de bien comprendre ces scripts avant de les utiliser sur une instance Deploy en production.' 
+---
+= Comprendre les scripts Python pour ONTAP Select Deploy
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Les exemples de scripts Python vous permettent d'effectuer différentes tâches. Il est important de bien comprendre ces scripts avant de les utiliser sur une instance Deploy en production.
+
+
+
+== caractéristiques de conception communes
+
+Les scripts ont été conçus avec les caractéristiques communes suivantes :
+
+* Exécutez depuis l'interface de ligne de commandes sur une machine cliente. Vous pouvez exécuter les scripts Python depuis n'importe quelle machine cliente correctement configurée. Consultez la section _Avant de commencer_ pour plus d'informations.
+* Accepter les paramètres d'entrée de la ligne de commandes Chaque script est contrôlé à la ligne de commandes par des paramètres d'entrée.
+* Chaque script lit un fichier d'entrée en fonction de son objectif. Lors de la création ou de la suppression d'un cluster, vous devez fournir un fichier de configuration JSON. Lors de l'ajout d'une licence de nœud, vous devez fournir un fichier de licence valide.
+* Utilisez un module de support commun Le module de support commun _deploy_requests.py_ contient une seule classe. Il est importé et utilisé par chacun des scripts.
+
+
+
+
+== Créer un cluster
+
+Vous pouvez créer un cluster ONTAP Select à l'aide du script cluster.py. En fonction des paramètres de la ligne de commandes et du contenu du fichier d'entrée JSON, vous pouvez adapter le script à votre environnement de déploiement comme suit :
+
+* Hyperviseur : Vous pouvez déployer sur ESXi ou KVM (selon la version de Deploy). Lors d'un déploiement sur ESXi, l'hyperviseur peut être géré par vCenter ou être un hôte autonome.
+* Taille du cluster Vous pouvez déployer un cluster à nœud unique ou à nœuds multiples.
+* Licence d'évaluation ou de production Vous pouvez déployer un cluster avec une licence d'évaluation ou une licence achetée pour la production.
+
+
+Les paramètres d'entrée de l'interface de ligne de commandes (CLI) pour le script incluent :
+
+* Nom d'hôte ou adresse IP du serveur de déploiement
+* Mot de passe du compte utilisateur administrateur
+* Nom du fichier de configuration JSON
+* Option de verbosité pour l'affichage des messages
+
+
+
+
+== Ajouter une licence de nœud
+
+Si vous choisissez de déployer un cluster de production, vous devez ajouter une licence pour chaque nœud à l'aide du script _add_license.py_. Vous pouvez ajouter la licence avant ou après le déploiement du cluster.
+
+Les paramètres d'entrée de l'interface de ligne de commandes (CLI) pour le script incluent :
+
+* Nom d'hôte ou adresse IP du serveur de déploiement
+* Mot de passe du compte utilisateur administrateur
+* Nom du fichier de licence
+* Nom d'utilisateur ONTAP disposant des privilèges nécessaires pour ajouter la licence
+* Mot de passe pour l'utilisateur ONTAP
+
+
+
+
+== Supprimer un cluster
+
+Vous pouvez supprimer un cluster ONTAP Select existant à l'aide du script _delete_cluster.py_.
+
+Les paramètres d'entrée de l'interface de ligne de commandes (CLI) pour le script incluent :
+
+* Nom d'hôte ou adresse IP du serveur de déploiement
+* Mot de passe du compte utilisateur administrateur
+* Nom du fichier de configuration JSON
+
