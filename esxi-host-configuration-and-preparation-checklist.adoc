@@ -21,6 +21,7 @@ NOTE: L'utilitaire d'administration ONTAP Select Deploy ne réalise pas la confi
 
 
 
+[[step-1-prepare-the-esxi-hypervisor-host]]
 == Étape 1 : Préparer l’hôte hyperviseur ESXi
 
 Vérifiez la configuration de l'hôte ESXi et des ports du pare-feu.
@@ -63,6 +64,7 @@ Pour plus d'informations, consultez la link:https://techdocs.broadcom.com/us/en/
 
 
 
+[[step-2-review-the-ontap-select-cluster-configuration]]
 == Étape 2 : Examiner la configuration du cluster ONTAP Select
 
 Vous pouvez déployer ONTAP Select sous forme de cluster multinœud ou de cluster mononœud. Dans de nombreux cas, un cluster multinœud est préférable en raison du stockage supplémentaire et de la capacité de haute disponibilité (HA).

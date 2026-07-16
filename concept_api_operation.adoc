@@ -18,12 +18,14 @@ Bien que REST définisse un ensemble commun de technologies et de bonnes pratiqu
 
 
 
+[[hypervisor-host-versus-ontap-select-node]]
 == Hôte hyperviseur versus nœud ONTAP Select
 
 Un hôte hyperviseur est la plateforme matérielle principale qui héberge une machine virtuelle ONTAP Select. Lorsqu'une machine virtuelle ONTAP Select est déployée et active sur un hôte hyperviseur, la machine virtuelle est considérée comme un nœud ONTAP Select. Avec la version 3 de l'API REST Deploy, les objets hôte et nœud sont séparés et distincts. Cela permet une relation un-à-plusieurs, où un ou plusieurs nœuds ONTAP Select peuvent s'exécuter sur le même hôte hyperviseur.
 
 
 
+[[object-identifiers]]
 == identificateurs d'objets
 
 Chaque instance de ressource ou objet se voit attribuer un identifiant unique lors de sa création. Ces identifiants sont globalement uniques au sein d'une instance spécifique d'ONTAP Select Deploy. Après l'émission d'un appel API créant une nouvelle instance d'objet, la valeur de l'identifiant associé est renvoyée à l'appelant dans l' `location`en-tête de la réponse HTTP. Vous pouvez extraire l'identifiant et l'utiliser lors des appels ultérieurs faisant référence à l'instance de ressource.
@@ -33,12 +35,14 @@ NOTE: Le contenu et la structure interne des identifiants d'objet peuvent change
 
 
 
+[[request-identifiers]]
 == Identifiants de requête
 
 Chaque requête API réussie se voit attribuer un identifiant unique. L'identifiant est renvoyé dans l `request-id` en-tête de la réponse HTTP associée. Vous pouvez utiliser un identifiant de requête pour faire référence collectivement aux activités d'une transaction requête-réponse API spécifique. Par exemple, vous pouvez récupérer tous les messages d'événement d'une transaction à partir de l'identifiant de la requête.
 
 
 
+[[synchronous-and-asynchronous-calls]]
 == Appels synchrones et asynchrones
 
 Il existe deux manières principales pour un serveur de traiter une requête HTTP reçue d'un client :
@@ -49,6 +53,7 @@ Il existe deux manières principales pour un serveur de traiter une requête HTT
 
 
 
+[[confirm-the-completion-of-a-long-running-job]]
 == Confirmer l'achèvement d'un travail de longue durée
 
 En général, toute opération longue est traitée de manière asynchrone via une tâche en arrière-plan sur le serveur. Avec l'API REST Deploy, chaque tâche en arrière-plan est associée à un objet Job qui assure le suivi de la tâche et fournit des informations, comme son état actuel. Un objet Job, y compris son identifiant unique, est renvoyé dans la réponse HTTP après la création d'une tâche en arrière-plan.
@@ -63,6 +68,7 @@ Outre l'utilisation de l'objet Job, il existe d'autres moyens de déterminer la 
 
 
 
+[[security]]
 == Sécurité
 
 L'API Deploy utilise les technologies de sécurité suivantes :

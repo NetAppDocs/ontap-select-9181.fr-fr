@@ -18,6 +18,7 @@ Avant d'installer l'utilitaire d'administration Deploy dans un environnement d'h
 
 
 
+[[required-configuration-information]]
 == Informations de configuration requises
 
 Dans le cadre de votre planification de déploiement, vous devez déterminer les informations de configuration requises avant d'installer l'utilitaire d'administration ONTAP Select Deploy.
@@ -40,6 +41,7 @@ Dans le cadre de votre planification de déploiement, vous devez déterminer les
 |===
 
 
+[[optional-network-configuration-information]]
 == Informations de configuration réseau facultatives
 
 La machine virtuelle Deploy est configurée par défaut avec DHCP. Toutefois, si nécessaire, vous pouvez configurer manuellement l'interface réseau de la machine virtuelle.

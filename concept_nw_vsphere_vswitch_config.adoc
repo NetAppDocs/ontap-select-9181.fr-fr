@@ -38,6 +38,7 @@ NOTE: ONTAP Select prend en charge un maximum de quatre VMNIC.
 
 
 
+[[standard-or-distributed-vswitch-and-four-physical-ports-per-node]]
 == Standard ou distribué vSwitch et quatre ports physiques par nœud
 
 Vous pouvez affecter quatre groupes de ports à chaque nœud dans un cluster multi-nœuds. Chaque groupe de ports dispose d’un port physique actif et de trois ports physiques de secours, comme dans la figure suivante.
@@ -106,6 +107,7 @@ Pour plus de clarté, les affectations sont les suivantes :
 |===
 
 
+[[standard-or-distributed-vswitch-and-two-physical-ports-per-node]]
 == Standard ou distribué vSwitch et deux ports physiques par nœud
 
 Lorsqu'on utilise deux cartes réseau haut débit (25/40Gb), la configuration recommandée des groupes de ports est conceptuellement très similaire à celle avec quatre adaptateurs 10Gb. Vous devriez utiliser quatre groupes de ports même lorsque vous n'utilisez que deux adaptateurs physiques. Les attributions des groupes de ports sont les suivantes :
@@ -134,6 +136,7 @@ image:DDN_13.jpg["vSwitch avec deux ports physiques par nœud"]
 
 
 
+[[distributed-vswitch-with-lacp]]
 == Distributed vSwitch avec LACP
 
 Lors de l'utilisation de vSwitches distribués dans votre configuration, LACP peut être utilisé (bien que ce ne soit pas une bonne pratique) afin de simplifier la configuration réseau. La seule configuration LACP prise en charge exige que toutes les VMNIC soient dans un seul LAG. Le commutateur physique de liaison montante doit prendre en charge une taille MTU comprise entre 7 500 et 9 000 sur tous les ports du canal. Les réseaux ONTAP Select internes et externes doivent être isolés au niveau du groupe de ports. Le réseau interne doit utiliser un VLAN non routable (isolé). Le réseau externe peut utiliser VST, EST ou VGT.

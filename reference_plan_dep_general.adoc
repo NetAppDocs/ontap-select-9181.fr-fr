@@ -18,6 +18,7 @@ Plusieurs exigences générales doivent être prises en compte lors de la planif
 
 
 
+[[pairing-the-deploy-utility-with-the-ontap-select-clusters]]
 == Associer l'utilitaire Deploy aux clusters ONTAP Select
 
 Vous disposez de plusieurs options pour associer une instance de l'utilitaire Deploy aux clusters ONTAP Select.
@@ -36,6 +37,7 @@ NOTE: Une instance de l'utilitaire Deploy peut administrer jusqu'à 400 nœuds O
 
 
 
+[[requirements-related-to-the-kvm-environment]]
 == Exigences relatives à l'environnement KVM
 
 Avant d'installer l'utilitaire d'administration Deploy dans un environnement d'hyperviseur KVM, vous devez consulter les exigences de base et vous préparer au déploiement.
@@ -70,6 +72,7 @@ ONTAP Select Deploy prend uniquement en charge la version IP 4 (IPv4). La versio
 
 
 
+[[required-configuration-information]]
 == Informations de configuration requises
 
 Dans le cadre de votre planification de déploiement, vous devez déterminer les informations de configuration requises avant d'installer l'utilitaire d'administration ONTAP Select Deploy.
@@ -88,6 +91,7 @@ Le réseau auquel la machine virtuelle de déploiement est connectée.
 
 
 
+[[optional-network-configuration-information]]
 == Informations de configuration réseau facultatives
 
 La machine virtuelle de déploiement est configurée par défaut avec le protocole DHCP. Toutefois, si nécessaire, vous pouvez configurer manuellement l'interface réseau de la machine virtuelle.
@@ -115,6 +119,7 @@ Les domaines de recherche à utiliser.
 
 
 
+[[authentication-using-the-credential-store]]
 == Authentification à l'aide du magasin d'identifiants
 
 Le magasin d'identifiants ONTAP Select Deploy est une base de données contenant les informations de compte. Deploy utilise les identifiants de compte pour effectuer l'authentification de l'hôte lors de la création et de la gestion du cluster. Vous devez savoir comment le magasin d'identifiants est utilisé lors de la planification d'un déploiement ONTAP Select.

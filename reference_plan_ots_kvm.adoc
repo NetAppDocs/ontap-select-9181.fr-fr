@@ -18,6 +18,7 @@ Vous pouvez configurer ONTAP Select sur l'hyperviseur KVM avec une baie de stock
 
 
 
+[[basic-requirements-and-restrictions]]
 == Exigences et restrictions de base
 
 Si vous utilisez une baie externe pour les pools de stockage ONTAP Select, les restrictions de configuration suivantes s'appliquent :
@@ -33,6 +34,7 @@ CAUTION: La capacité de stockage que vous spécifiez doit respecter les limites
 
 
 
+[[best-practices]]
 == Meilleures pratiques
 
 Vous devriez suivre ces bonnes pratiques :

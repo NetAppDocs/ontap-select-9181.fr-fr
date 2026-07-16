@@ -26,6 +26,7 @@ Vous pouvez déployer une instance d'évaluation de 90 jours d'un cluster ONTAP 
 
 
 
+[[step-1-prepare-the-ontap-select-cluster-host]]
 == Étape 1 : Préparer l’hôte du cluster ONTAP Select
 
 Utilisez les exigences suivantes pour préparer l'hôte ESXi sur lequel le cluster ONTAP Select est déployé. La description de la plateforme est basée sur une configuration de type instance standard ou petite avec un stockage local à connexion directe (DAS) formaté à l'aide du système de fichiers VMFS-5 ou VMFS-6.
@@ -36,6 +37,7 @@ Pour plus d'informations sur les options de configuration de l'hôte, reportez-v
 
 
 
+[[step-2-deploy-a-single-node-ontap-select-cluster-using-an-ovf-template]]
 == Étape 2 : Déployer un cluster ONTAP Select à nœud unique à l’aide d’un modèle OVF
 
 Effectuez les étapes suivantes sur un serveur hôte ESXi 64 bits pris en charge.

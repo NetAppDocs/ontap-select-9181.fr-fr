@@ -35,6 +35,7 @@ Vous lancez les procédures d'expansion et de contraction du cluster à partir d
 
 
 
+[[hardware-and-storage-considerations]]
 == Considérations relatives au matériel et au stockage
 
 La fonctionnalité d'extension et de réduction du cluster est prise en charge sur les hôtes hyperviseur KVM et ESXi suivants.
@@ -69,6 +70,7 @@ L'extension et la réduction des clusters sont prises en charge pour les version
 ====
 
 
+[[expand-the-cluster]]
 == Développer le cluster
 
 Utilisez la fonction d'extension de cluster pour augmenter la taille d'un cluster ONTAP Select existant.
@@ -124,6 +126,7 @@ Après avoir étendu le cluster, vous devriez link:task_cli_clusters.html["Sauve
 
 
 
+[[contract-the-cluster]]
 == Contracter le cluster
 
 Utilisez la fonction de réduction de cluster pour diminuer la taille d'un cluster ONTAP Select existant.

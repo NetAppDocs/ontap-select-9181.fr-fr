@@ -19,6 +19,7 @@ Découvrez les nouvelles fonctionnalités et améliorations des versions prises 
 
 
 
+[[ontap-select-9-18-1]]
 == ONTAP Select 9.18.1
 
 Mises à jour des options de téléchargement du produit ONTAP Select:: Les options de téléchargement du produit ONTAP Select sur le site d'assistance NetApp changent avec la sortie d'ONTAP Select 9.18.1 pour devenir *ONTAP Select Deploy* et *ONTAP Select Image*. Ces deux nouvelles options de téléchargement de produit remplacent les quatre précédentes, comme indiqué dans le tableau suivant :
@@ -70,6 +71,7 @@ Prise en charge mise à jour de l'hyperviseur KVM:: À partir de ONTAP Select 9.
 
 
 
+[[ontap-select-9-17-1]]
 == ONTAP Select 9.17.1
 
 Prise en charge RAID logicielle pour les disques NVMe connectés localement sur les hôtes KVM:: ONTAP Select 9.17.1 introduit la prise en charge du RAID logiciel pour les disques NVMe connectés localement à ONTAP Select sur un hôte hyperviseur Kernel-Based Virtual Machine (KVM).
@@ -125,9 +127,9 @@ ONTAP Select Deploy et ONTAP Select pour ESXi prennent en charge la configuratio
 
 [NOTE]
 ====
-Pour effectuer des opérations sur la bibliothèque de contenu, vous aurez besoin de niveaux d'autorisation supplémentaires. Ceci est nécessaire pour les déploiements vSAN ESA si vous utilisez des rôles restreints.
+Pour effectuer des opérations sur la Content Library, vous devez disposer de niveaux d'autorisation supplémentaires. Cet accès est requis pour les déploiements vSAN ESA si vous utilisez des rôles restreints.
 
-link:https://docs.netapp.com/us-en/ontap-select/reference_plan_dep_vmware.html["Découvrez comment accéder aux niveaux d'autorisation pour les opérations de la bibliothèque de contenu"^].
+link:reference_plan_dep_vmware.html#vmware-vcenter-server-considerations["Découvrez comment accéder aux niveaux d'autorisation pour les opérations de la Content Library"].
 
 ====
 --
@@ -155,6 +157,7 @@ Prise en charge améliorée de VMware ESXi:: ONTAP Select 9.17.1 inclut la prise
 
 
 
+[[ontap-select-9-16-1]]
 == ONTAP Select 9.16.1
 
 Prise en charge mise à jour des fichiers de licence NetApp:: À compter d'ONTAP Select 9.16.1, la prise en charge des fichiers de licence NetApp (NLF) est mise à jour. Le nouveau format NLF inclut les licences pour les fonctionnalités ARP, ONTAP S3 et S3 SnapMirror. link:reference_lic_ontap_features.html#enabled-ontap-features["En savoir plus"].
@@ -170,6 +173,7 @@ Prise en charge mise à jour de l'hyperviseur KVM:: À partir de ONTAP Select 9.
 
 
 
+[[ontap-select-9-15-1]]
 == ONTAP Select 9.15.1
 
 Prise en charge mise à jour de l'hyperviseur KVM:: À partir d'ONTAP Select 9.15.1, l'hyperviseur Kernel-Based Virtual Machine (KVM) est pris en charge sur RHEL 9.4 et Rocky Linux 9.4.
@@ -194,6 +198,7 @@ NOTE: La prise en charge de l’extension et de la réduction des clusters est l
 
 
 
+[[ontap-select-9-14-1]]
 == ONTAP Select 9.14.1
 
 Prise en charge de l'hyperviseur KVM:: À compter d'ONTAP Select 9.14.1, la prise en charge de l'hyperviseur KVM a été rétablie. Auparavant, la prise en charge du déploiement d'un nouveau cluster sur un hyperviseur KVM avait été supprimée dans ONTAP Select 9.10.1 et la prise en charge de la gestion des clusters et hôtes KVM existants, à l'exception de la mise hors ligne ou de la suppression, avait été supprimée dans ONTAP Select 9.11.1.
@@ -204,6 +209,7 @@ Prise en charge améliorée de VMware ESXi:: ONTAP Select 9.14.1 inclut la prise
 
 
 
+[[ontap-select-9-13-1]]
 == ONTAP Select 9.13.1
 
 Prise en charge de NVMe sur TCP:: Lors de la mise à niveau vers ONTAP Select 9.13.1, vous devez disposer de la nouvelle licence pour la prise en charge de NVMe sur TCP. Cette licence est automatiquement incluse lors du premier déploiement d'ONTAP Select à partir de la version 9.13.1.
@@ -213,6 +219,7 @@ Prise en charge mise à jour d'ONTAP Select Deploy:: À compter d'avril 2024, ON
 
 
 
+[[ontap-select-9-12-1]]
 == ONTAP Select 9.12.1
 
 ONTAP Select 9.12.1 bénéficie de la plupart des nouveautés de la version actuelle du produit ONTAP de base. Il n'inclut aucune nouvelle fonctionnalité ni amélioration spécifique à ONTAP Select.
@@ -221,6 +228,7 @@ ONTAP Select 9.12.1 bénéficie de la plupart des nouveautés de la version actu
 
 
 
+[[ontap-select-9-11-1]]
 == ONTAP Select 9.11.1
 
 Prise en charge améliorée de VMware ESXi:: ONTAP Select 9.11.1 inclut la prise en charge de VMware ESXi 7.0 U3C.
@@ -249,6 +257,7 @@ NetApp recommande fortement que les clients planifient et exécutent une migrati
 
 
 
+[[ontap-select-9-10-1]]
 == ONTAP Select 9.10.1
 
 Prise en charge de VMware NSX-T:: ONTAP Select 9.10.1 est compatible avec VMware NSX-T version 3.1.2. Il n'y a aucun problème de fonctionnalité ni de défaut lors de l'utilisation de NSX-T avec un cluster ONTAP Select à nœud unique déployé à l'aide d'un fichier OVA et de l'utilitaire d'administration ONTAP Select Deploy. Cependant, lors de l'utilisation de NSX-T avec un cluster ONTAP Select à nœuds multiples, vous devez prendre en compte les exigences et limitations suivantes :
@@ -274,6 +283,7 @@ L'hyperviseur KVM n'est plus pris en charge:: À partir d'ONTAP Select 9.10.1, i
 
 
 
+[[ontap-select-9-9-1]]
 == ONTAP Select 9.9.1
 
 Prise en charge de la famille de processeurs:: À partir d'ONTAP Select 9.9.1, seuls les modèles de processeur Intel Xeon Sandy Bridge ou ultérieurs sont pris en charge pour ONTAP Select.
@@ -289,6 +299,7 @@ Prise en charge VMware ESXi mise à jour:: La prise en charge de VMware ESXi a �
 
 
 
+[[ontap-select-9-8]]
 == ONTAP Select 9.8
 
 Interface haut débit:: La fonctionnalité d’interface haut débit améliore la connectivité réseau en offrant une option pour les débits 25G (25GbE) et 40G (40GbE). Pour obtenir les meilleures performances lors de l’utilisation de ces vitesses plus élevées, vous devez suivre les bonnes pratiques concernant les configurations de mappage des ports, comme décrit dans la documentation ONTAP Select.

@@ -21,6 +21,7 @@ NOTE: Le retrait du disque défaillant et l'ajout d'un nouveau disque (marqué c
 
 
 
+[[identify-the-failed-drive]]
 == Identifiez le disque défaillant
 
 Lorsqu'un disque tombe en panne, vous devez utiliser la ligne de commandes ONTAP pour identifier la défaillance de disque.
@@ -86,6 +87,7 @@ NET-1.4 893.3GB - - SSD broken - sti-rx2540-346a'
 ====
 
 
+[[remove-the-failed-drive]]
 == Retirez le disque défaillant
 
 Après avoir identifié le lecteur défaillant, retirez le disque.
@@ -211,6 +213,7 @@ image:ST_26.jpg["Avertissement"]
 ====
 
 
+[[add-the-new-spare-drive]]
 == Ajouter le nouveau disque de secours
 
 Après avoir retiré le disque défectueux, ajoutez le disque de secours.

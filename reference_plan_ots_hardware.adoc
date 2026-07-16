@@ -18,6 +18,7 @@ Il existe plusieurs exigences matérielles et problèmes de planification à pre
 
 
 
+[[hypervisor-requirements]]
 == Exigences de l'hyperviseur
 
 Plusieurs exigences concernent l'hyperviseur sur lequel ONTAP Select est exécuté.
@@ -27,12 +28,14 @@ NOTE: Vous devriez consulter les link:reference_release_notes.html["Notes de ver
 
 
 
+[[vmware-licensing]]
 === Licences VMware
 
 Pour déployer un cluster ONTAP Select, votre organisation doit disposer d'une licence VMware vSphere valide pour les hôtes hyperviseurs sur lesquels ONTAP Select s'exécute. Vous devez utiliser les licences appropriées à votre déploiement.
 
 
 
+[[software-compatibility]]
 === Compatibilité logicielle
 
 Vous pouvez déployer ONTAP Select sur les hyperviseurs KVM et ESXi.
@@ -69,12 +72,14 @@ NOTE: ESXi 7.0 GA a atteint le statut de fin de disponibilité. Si vous disposez
 ====
 
 
+[[vmware-vcenter-and-standalone-esxi-hosts]]
 === VMware vCenter et hôtes ESXi autonomes
 
 Si un hôte hyperviseur ESXi est géré par un serveur vCenter, vous devez enregistrer l’hôte auprès de l’utilitaire d’administration Deploy à l’aide des identifiants vCenter. Vous ne pouvez pas enregistrer l’hôte comme hôte autonome à l’aide des identifiants ESXi.
 
 
 
+[[core-hardware-requirements]]
 == exigences matérielles de base
 
 L'hôte physique de l'hyperviseur sur lequel vous déployez ONTAP Select doit répondre à plusieurs exigences matérielles. Vous pouvez choisir n'importe quelle plateforme pour l'hôte de l'hyperviseur, à condition qu'elle réponde aux exigences matérielles minimales. Les fournisseurs suivants proposent des plateformes matérielles prises en charge : Cisco, Dell, HP, Fujitsu, Lenovo et Supermicro.
@@ -86,6 +91,7 @@ Reportez-vous à la  https://mysupport.netapp.com/matrix["Outil de matrice d'int
 
 
 
+[[basic-hardware-requirements]]
 === Configuration matérielle de base requise
 
 Plusieurs exigences matérielles communes s'appliquent à toutes les plateformes, quel que soit le type d'instance de nœud ou l'offre de licence.
@@ -114,6 +120,7 @@ Plusieurs configurations Ethernet sont prises en charge en fonction de la taille
 |===
 
 
+[[additional-hardware-requirements-based-on-the-instance-type]]
 === Configuration matérielle supplémentaire requise selon le type d'instance
 
 Plusieurs exigences matérielles supplémentaires s'appliquent en fonction du type d'instance de nœud.

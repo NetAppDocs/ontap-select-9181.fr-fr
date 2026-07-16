@@ -18,12 +18,14 @@ Chaque appel à l'API Deploy est effectué sous forme de requête HTTP adressée
 
 
 
+[[input-variables-controlling-an-api-request]]
 == Variables d'entrée contrôlant une requête API
 
 Vous pouvez contrôler le traitement d'un appel API grâce aux paramètres définis dans la requête HTTP.
 
 
 
+[[request-headers]]
 === En-têtes de requête
 
 Vous devez inclure plusieurs en-têtes dans la requête HTTP, notamment :
@@ -35,6 +37,7 @@ Vous devez inclure plusieurs en-têtes dans la requête HTTP, notamment :
 
 
 
+[[request-body]]
 === Corps de la requête
 
 Le contenu du corps de la requête varie selon l'appel spécifique. Le corps d'une requête HTTP se compose de l'un des éléments suivants :
@@ -45,6 +48,7 @@ Le contenu du corps de la requête varie selon l'appel spécifique. Le corps d'u
 
 
 
+[[filter-objects]]
 === Filtrer les objets
 
 Lors d'un appel API utilisant la méthode GET, vous pouvez limiter ou filtrer les objets renvoyés en fonction de n'importe quel attribut. Par exemple, vous pouvez spécifier une valeur exacte à faire correspondre :
@@ -85,6 +89,7 @@ Vous pouvez également renvoyer un ensemble d'objets en fonction de la définiti
 
 
 
+[[selecting-object-fields]]
 === Sélection des champs d'objet
 
 Par défaut, une requête API GET ne renvoie que les attributs permettant d'identifier de manière unique le ou les objets. Cet ensemble minimal de champs sert de clé pour chaque objet et varie selon le type d'objet. Vous pouvez sélectionner des propriétés supplémentaires d'objet à l'aide du paramètre de requête fields de la manière suivante :
@@ -99,6 +104,7 @@ TIP: En tant que bonne pratique, vous devez toujours identifier précisément le
 
 
 
+[[sort-objects-in-the-output-set]]
 === Trier les objets de l'ensemble de sortie
 
 Les enregistrements d'une collection de ressources sont renvoyés dans l'ordre par défaut défini par l'objet. Vous pouvez modifier cet ordre à l'aide du paramètre de requête order_by, en spécifiant le nom du champ et le sens de tri comme suit :
@@ -111,6 +117,7 @@ Lorsque vous incluez plusieurs paramètres, vous devez séparer les champs par u
 
 
 
+[[pagination]]
 === Pagination
 
 Lors d'un appel API GET pour accéder à une collection d'objets du même type, tous les objets correspondants sont renvoyés par défaut. Si nécessaire, vous pouvez limiter le nombre d'enregistrements renvoyés à l'aide du paramètre de requête max_records avec la requête. Par exemple :
@@ -123,12 +130,14 @@ Vous pouvez effectuer plusieurs requêtes pour parcourir les événements (ou to
 
 
 
+[[interpret-an-api-response]]
 == Interpréter une réponse d'API
 
 Chaque requête API génère une réponse renvoyée au client. Vous pouvez examiner la réponse pour déterminer si elle a réussi et récupérer des données supplémentaires si nécessaire.
 
 
 
+[[http-status-code]]
 === code d'état HTTP
 
 Les codes d'état HTTP utilisés par l'API REST Deploy sont décrits ci-dessous.
@@ -169,6 +178,7 @@ Les codes d'état HTTP utilisés par l'API REST Deploy sont décrits ci-dessous.
 |===
 
 
+[[response-headers]]
 === En-têtes de réponse
 
 Plusieurs en-têtes sont inclus dans la réponse HTTP générée par le serveur Deploy, notamment :
@@ -179,6 +189,7 @@ Plusieurs en-têtes sont inclus dans la réponse HTTP générée par le serveur 
 
 
 
+[[response-body]]
 === Corps de la réponse
 
 Le contenu de la réponse associée à une requête API varie selon l'objet, le type de traitement et le succès ou l'échec de la requête. Le corps de la réponse est rendu en JSON.

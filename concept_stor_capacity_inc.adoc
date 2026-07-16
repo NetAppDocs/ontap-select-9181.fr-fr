@@ -54,6 +54,7 @@ La taille maximale des VMDK utilisées lors des opérations d'ajout de capacité
 
 
 
+[[increase-capacity-for-ontap-select-with-software-raid]]
 == Augmentez la capacité de ONTAP Select avec le RAID logiciel
 
 L'assistant d'ajout de stockage permet également d'augmenter la capacité gérée pour les nœuds ONTAP Select utilisant le RAID logiciel. L'assistant affiche uniquement les disques SSD DAS disponibles pouvant être mappés comme RDM à la machine virtuelle ONTAP Select.

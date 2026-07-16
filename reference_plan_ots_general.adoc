@@ -18,6 +18,7 @@ Plusieurs exigences générales sont à prendre en compte lors de la planificati
 
 
 
+[[required-linux-knowledge-and-skills-for-kvm]]
 == Connaissances et compétences Linux requises pour KVM
 
 Linux avec l'hyperviseur KVM est un environnement complexe dans lequel travailler. Avant de déployer ONTAP Select sur KVM, vous devez posséder les connaissances et les compétences nécessaires.
@@ -61,6 +62,7 @@ Réseautage et configuration Open vSwitch:: Vous devez maîtriser les concepts d
 
 
 
+[[cluster-size-and-related-considerations]]
 == Taille du cluster et considérations connexes
 
 Il existe plusieurs questions de planification liées à la taille du cluster que vous devez prendre en compte.
@@ -71,6 +73,7 @@ Dédié versus colocalisé:: En fonction du type d'application, il convient de d
 
 
 
+[[hypervisor-host-considerations]]
 == Considérations relatives à l'hôte de l'hyperviseur
 
 Il existe plusieurs points de planification relatifs à l'hôte de l'hyperviseur que vous devriez prendre en compte.
@@ -124,6 +127,7 @@ Intégration d'ONTAP Select avec un cluster ONTAP basé sur du matériel:: Vous 
 
 
 
+[[storage-considerations]]
 == Considérations relatives au stockage
 
 Il existe plusieurs points de planification relatifs au stockage hôte que vous devriez prendre en compte.
@@ -156,6 +160,7 @@ Modèle de licence pour le déploiement en production:: Vous devez sélectionner
 
 
 
+[[authentication-using-the-credential-store]]
 == Authentification à l'aide du magasin d'identifiants
 
 Le magasin d'identifiants ONTAP Select Deploy est une base de données contenant les informations de compte. Deploy utilise les identifiants de compte pour effectuer l'authentification de l'hôte lors de la création et de la gestion du cluster. Vous devez savoir comment le magasin d'identifiants est utilisé lors de la planification d'un déploiement ONTAP Select.

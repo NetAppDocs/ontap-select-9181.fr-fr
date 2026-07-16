@@ -23,6 +23,7 @@ Vous trouverez ici les réponses aux questions fréquemment posées sur ONTAP Se
 ====
 
 
+[[general]]
 == Général
 
 Il existe plusieurs questions et réponses générales.
@@ -55,6 +56,7 @@ Contactez link:mailto:ng-ses-ontap-select@netapp.com["ng-ses-ontap-select@netapp
 
 
 
+[[licenses-installation-upgrades-and-reverts]]
 == Licences, installation, mises à jour et restaurations
 
 Vous trouverez plusieurs questions et réponses concernant les licences, l'installation, les mises à jour et les restaurations.
@@ -125,6 +127,7 @@ Si un abonnement au pool de capacité expire, le système vous avertit d'abord, 
 
 
 
+[[storage]]
 == Stockage
 
 Il existe plusieurs questions et réponses concernant le stockage.
@@ -216,6 +219,7 @@ Vous devez installer et exécuter les composants open source CLVM et pacemaker (
 
 
 
+[[vcenter]]
 == vCenter
 
 Il existe plusieurs questions et réponses concernant VMware vCenter.
@@ -239,6 +243,7 @@ La liste des droits vCenter requis est disponible ici : link:reference_plan_ots_
 
 
 
+[[ha-and-clusters]]
 == HA et clusters
 
 Il existe plusieurs questions et réponses traitant des paires haute disponibilité et des clusters.
@@ -300,6 +305,7 @@ La séparation du trafic HA sur une infrastructure physique distincte peut perme
 
 
 
+[[mediator-service]]
 == Service de médiation
 
 Vous trouverez plusieurs questions et réponses concernant le service de médiation.

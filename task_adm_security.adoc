@@ -18,6 +18,7 @@ Vous pouvez effectuer plusieurs tâches connexes dans le cadre de la sécurisati
 
 
 
+[[change-the-deploy-administrator-password]]
 == Modifier le mot de passe de l'administrateur Deploy
 
 Vous pouvez modifier le mot de passe du compte administrateur de la machine virtuelle Deploy selon vos besoins via l’interface utilisateur Web.
@@ -30,6 +31,7 @@ Vous pouvez modifier le mot de passe du compte administrateur de la machine virt
 
 
 
+[[add-a-management-server-account]]
 == Ajouter un compte de serveur de gestion
 
 Vous pouvez ajouter un compte de serveur de gestion à la base de données des identifiants Deploy.
@@ -67,6 +69,7 @@ Vous devez connaître les types d'identifiants et leur utilisation par ONTAP Sel
 
 
 
+[[configure-mfa]]
 == Configurer MFA
 
 À partir de ONTAP Select 9.13.1, l'authentification multifactorielle (MFA) est prise en charge pour le compte administrateur ONTAP Select Deploy :
@@ -77,10 +80,12 @@ Vous devez connaître les types d'identifiants et leur utilisation par ONTAP Sel
 
 
 
+[[ontap-select-deploy-cli-mfa-login-using-yubikey-piv-or-fido2-authentication]]
 == Connexion MFA à l’interface de ligne de commande ONTAP Select Deploy à l’aide de YubiKey PIV ou de la méthode d'authentification FIDO2
 
 
 
+[[yubikey-piv]]
 === YubiKey PIV
 
 Configurez le code PIN du YubiKey et générez ou importez la clé privée et le certificat de l'agent de support à distance (RSA) ou de l'algorithme de signature numérique à courbe elliptique (ECDSA) en suivant les étapes de link:https://docs.netapp.com/us-en/ontap-technical-reports/security.html#multifactor-authentication["TR-4647 : Authentification multifactorielle dans ONTAP"^].
@@ -91,6 +96,7 @@ Configurez le code PIN du YubiKey et générez ou importez la clé privée et le
 
 
 
+[[fido2]]
 === FIDO2
 
 Si vous choisissez d’opter pour l’authentification FIDO2 YubiKey, configurez le code PIN FIDO2 YubiKey à l’aide du YubiKey Manager et générez la clé FIDO2 avec PuTTY-CAC (Common Access Card) pour Windows ou ssh-keygen pour MacOS. Les étapes à suivre figurent dans le rapport technique link:https://docs.netapp.com/us-en/ontap-technical-reports/security.html#multifactor-authentication["TR-4647 : Authentification multifactorielle dans ONTAP"^].
@@ -101,6 +107,7 @@ Si vous choisissez d’opter pour l’authentification FIDO2 YubiKey, configurez
 
 
 
+[[obtain-the-yubikey-piv-or-fido2-public-key]]
 === Obtenez la clé publique YubiKey PIV ou FIDO2
 
 L'obtention de la clé publique dépend du fait que vous soyez un client Windows ou MacOS, et si vous utilisez PIV ou FIDO2.
@@ -117,6 +124,7 @@ L'obtention de la clé publique dépend du fait que vous soyez un client Windows
 
 
 
+[[configure-the-public-key-in-ontap-select-deploy]]
 == Configurez la clé publique dans ONTAP Select Deploy
 
 SSH est utilisé par le compte administrateur pour la méthode d'authentification par clé publique. La commande utilisée est identique, que la méthode d'authentification soit l'authentification standard par clé publique SSH, YubiKey PIV ou l'authentification FIDO2.
@@ -156,6 +164,7 @@ MFA enabled Successfully
 
 
 
+[[log-in-to-ontap-select-deploy-using-yubikey-piv-authentication-over-ssh]]
 == Connectez-vous à ONTAP Select Deploy en utilisant l’authentification PIV YubiKey via SSH
 
 Vous pouvez vous connecter à ONTAP Select Deploy en utilisant l’authentification PIV YubiKey via SSH.
@@ -184,6 +193,7 @@ Version: NetApp Release 9.13.1 Build:6811765 08-17-2023 03:08:09
 ----
 
 
+[[ontap-select-deploy-cli-mfa-login-using-ssh-keygen]]
 == Connexion MFA à ONTAP Select Deploy via CLI avec ssh-keygen
 
 La commande  `ssh-keygen` est un outil permettant de créer de nouvelles paires de clés d'authentification pour SSH. Les paires de clés sont utilisées pour automatiser les connexions, l’authentification unique et l’authentification des hôtes.
@@ -236,6 +246,7 @@ Version: NetApp Release 9.13.1 Build:6811765 08-17-2023 03:08:09
 
 
 
+[[migrate-from-mfa-to-single-factor-authentication]]
 === Migrez de l'authentification multifacteur (MFA) vers l'authentification à facteur unique
 
 L’authentification multifacteur (MFA) peut être désactivée pour le compte administrateur Deploy à l’aide des méthodes suivantes :
