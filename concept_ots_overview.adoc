@@ -14,7 +14,7 @@ summary: 'ONTAP Select est une version logicielle uniquement d"ONTAP que vous d�
 
 
 [role="lead"]
-ONTAP Select est une version logicielle uniquement d'ONTAP que vous pouvez déployer en tant que machine virtuelle sur un hôte hyperviseur. Elle complète la suite des offres ONTAP classiques FAS, AFF et ASA ainsi que d'autres options logicielles uniquement telles que Cloud Volumes ONTAP.
+ONTAP Select est une version logicielle uniquement d'ONTAP que vous pouvez déployer en tant que machine virtuelle sur un hôte hyperviseur. Elle complète la suite des offres ONTAP AFF et FAS classiques, ainsi que d'autres options logicielles uniquement telles que Cloud Volumes ONTAP.
 
 ONTAP Select transforme les disques internes, NVMe, SSD ou HDD, et le stockage sur baie externe, en un système de stockage flexible offrant de nombreux avantages similaires à ceux des systèmes de stockage ONTAP dédiés. Vous pouvez également déployer ONTAP Select sur de nouveaux serveurs ou sur votre infrastructure serveur existante. ONTAP Select est facile à gérer et utilise le même logiciel d'administration que les solutions basées sur ONTAP, ce qui signifie une réduction des charges opérationnelles et des besoins en formation.
 
@@ -31,7 +31,7 @@ SnapMirror vous permet de déplacer des données entre les stockages ONTAP à tr
 
 La mise en œuvre et la fourniture de services informatiques par logiciel permettent aux administrateurs de provisionner rapidement des ressources avec une rapidité et une agilité inédites. Avec la migration des centres de données modernes vers une architecture d'infrastructure définie par logiciel (SDI), il est possible de dissocier les actifs informatiques les plus précieux de l'infrastructure physique sous-jacente, ce qui offre flexibilité, évolutivité et programmabilité.
 
-Dans un monde de commodité où les données sont fragmentées dans des silos de stockage à connexion directe (DAS), la mobilité des données et la gestion des données sont devenues des problèmes plus complexes. Le stockage défini par logiciel (SDS) s'est imposé comme un élément important du paysage SDI pour répondre à ces problématiques et à d'autres encore.
+Dans un monde de commodité où les données sont fragmentées dans des silos de stockage à connexion directe (DAS), l'accès aux données et leur gestion sont devenus des problèmes plus complexes. Le stockage défini par logiciel (SDS) s'est imposé comme un élément important du paysage SDI pour répondre à ces problématiques et à d'autres encore.
 
 ONTAP Select est la solution NetApp pour le marché des SDS. ONTAP Select apporte des fonctionnalités de gestion du stockage de haute performance aux centres de données définis par logiciel et étend l'architecture NetApp Data Fabric aux cas d'utilisation extrêmes, y compris l'Internet des objets (IoT) et les serveurs tactiques.
 
@@ -130,6 +130,7 @@ NOTE: À partir d'ONTAP Select 9.16.1, les mises à jour manuelles d'ARP sont pr
 +
 Toute modification de l'espace IP du cluster, y compris l'ajout ou la suppression de ports, de réseaux locaux virtuels (VLAN) ou de groupes d'agrégation de liens, n'est pas prise en charge.
 
+* Groupes de cohérence dans l’asynchrone SnapMirror
 * Fibre Channel
 +
 Fibre Channel et Fibre Channel over Ethernet ne sont pas pris en charge.
@@ -153,7 +154,7 @@ En raison de l'environnement virtualisé utilisé avec ONTAP Select, la fonction
 La modification des propriétés des ports ONTAP, notamment la vitesse, le mode duplex et le contrôle de flux, n'est pas prise en charge.
 
 * processeurs de services
-* Migration SVM
+* SVM-Migrate
 * SnapLock Compliance
 * SnapMirror active sync
 * VMware HCX
